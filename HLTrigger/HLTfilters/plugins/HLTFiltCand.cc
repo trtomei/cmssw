@@ -52,6 +52,7 @@ HLTFiltCand::HLTFiltCand(const edm::ParameterSet& iConfig)
       mhtsTag_(iConfig.getParameter<edm::InputTag>("mhtsTag")),
       trckTag_(iConfig.getParameter<edm::InputTag>("trckTag")),
       ecalTag_(iConfig.getParameter<edm::InputTag>("ecalTag")),
+      l1TkMuonTag_(iConfig.getParameter<edm::InputTag>("l1TkMuonTag")),
       photToken_(consumes<reco::RecoEcalCandidateCollection>(photTag_)),
       elecToken_(consumes<reco::ElectronCollection>(elecTag_)),
       muonToken_(consumes<reco::RecoChargedCandidateCollection>(muonTag_)),
@@ -61,6 +62,7 @@ HLTFiltCand::HLTFiltCand(const edm::ParameterSet& iConfig)
       mhtsToken_(consumes<reco::METCollection>(mhtsTag_)),
       trckToken_(consumes<reco::RecoChargedCandidateCollection>(trckTag_)),
       ecalToken_(consumes<reco::RecoEcalCandidateCollection>(ecalTag_)),
+      tkMuonToken_(consumes<TkMuonCollection>(l1TkMuonTag_)),
       min_Pt_(iConfig.getParameter<double>("MinPt")) {
   LogDebug("") << "MinPt cut " << min_Pt_ << " g: " << photTag_.encode() << " e: " << elecTag_.encode()
                << " m: " << muonTag_.encode() << " t: " << tausTag_.encode() << " j: " << jetsTag_.encode()
@@ -86,6 +88,7 @@ void HLTFiltCand::fillDescriptions(edm::ConfigurationDescriptions& descriptions)
   desc.add<edm::InputTag>("mhtsTag", edm::InputTag("mhtsCollection"));
   desc.add<edm::InputTag>("trckTag", edm::InputTag("trckCollection"));
   desc.add<edm::InputTag>("ecalTag", edm::InputTag("ecalCollection"));
+  desc.add<edm::InputTag>("l1TkMuonTag", edm::InputTag("tkMuonCollection"));
   desc.add<double>("MinPt", -1.0);
   descriptions.add("hltFiltCand", desc);
 }
@@ -114,6 +117,7 @@ bool HLTFiltCand::hltFilter(edm::Event& iEvent,
     filterproduct.addCollectionTag(mhtsTag_);
     filterproduct.addCollectionTag(trckTag_);
     filterproduct.addCollectionTag(ecalTag_);
+    filterproduct.addCollectionTag(l1TkMuonTag_);
   }
 
   // Specific filter code
@@ -129,6 +133,7 @@ bool HLTFiltCand::hltFilter(edm::Event& iEvent,
   Handle<METCollection> mhts;
   Handle<RecoChargedCandidateCollection> trcks;
   Handle<RecoEcalCandidateCollection> ecals;
+  Handle<TkMuonCollection> tkMuons;
 
   iEvent.getByToken(photToken_, photons);
   iEvent.getByToken(elecToken_, electrons);
@@ -139,7 +144,7 @@ bool HLTFiltCand::hltFilter(edm::Event& iEvent,
   iEvent.getByToken(mhtsToken_, mhts);
   iEvent.getByToken(trckToken_, trcks);
   iEvent.getByToken(ecalToken_, ecals);
-
+  iEvent.getByToken(tkMuonToken_,tkMuons);
   // look for at least one g,e,m,t,j,M,H,TR,SC above its pt cut
 
   // photons
@@ -246,6 +251,20 @@ bool HLTFiltCand::hltFilter(edm::Event& iEvent,
     }
   }
 
+// trkMuon
+  int ntrkmuon(0);
+  auto atrkmuons(tkMuons->begin());
+  auto otrkmuons(tkMuons->end());
+  TkMuonCollection::const_iterator itkMuon;
+  for (itkMuon = atrkmuons; itkMuon != otrkmuons; itkMuon++) {
+    if (itkMuon->pt() >= min_Pt_) {
+      ntrkmuon++;
+      //RecoChargedCandidateRef ref(RecoChargedCandidateRef(trcks, distance(atrcks, itrcks)));
+      //filterproduct.addObject(TriggerTrack, ref);
+    }
+  }
+
+
   // ecals
   int necal(0);
   auto aecals(ecals->begin());
@@ -265,7 +284,7 @@ bool HLTFiltCand::hltFilter(edm::Event& iEvent,
   // final filter decision:
   const bool accept((nphot > 0) && (nelec > 0) && (nmuon > 0) && (ntaus > 0) &&
                     //   (njets>0) && (nmets>0) && (nmhts>=0) && (ntrck>0) && (necal>0) );
-                    (njets > 0) && (nmets > 0) && (ntrck > 0) && (necal > 0));
+                    (njets > 0) && (nmets > 0) && (ntrck > 0) && (necal > 0) &&(ntrkmuon >0));
 
   LogDebug("") << "Number of g/e/m/t/j/M/H/TR/SC objects accepted:"
                << " " << nphot << " " << nelec << " " << nmuon << " " << ntaus << " " << njets << " " << nmets << " "

@@ -28,6 +28,7 @@
 #include "DataFormats/METReco/interface/CaloMETFwd.h"
 #include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/METReco/interface/METFwd.h"
+#include "DataFormats/L1TCorrelator/interface/TkMuon.h"
 
 //
 // class declaration
@@ -52,7 +53,9 @@ private:
   edm::InputTag mhtsTag_;  // input tag identifying product containing HTs
   edm::InputTag trckTag_;  // input tag identifying product containing Tracks
   edm::InputTag ecalTag_;  // input tag identifying product containing SuperClusters
+  edm::InputTag l1TkMuonTag_; //input tag for L1 Tk Muon product
 
+  typedef std::vector<l1t::TkMuon> TkMuonCollection;
   edm::EDGetTokenT<reco::RecoEcalCandidateCollection> photToken_;     // token identifying product containing photons
   edm::EDGetTokenT<reco::ElectronCollection> elecToken_;              // token identifying product containing electrons
   edm::EDGetTokenT<reco::RecoChargedCandidateCollection> muonToken_;  // token identifying product containing muons
@@ -62,6 +65,7 @@ private:
   edm::EDGetTokenT<reco::METCollection> mhtsToken_;                   // token identifying product containing HTs
   edm::EDGetTokenT<reco::RecoChargedCandidateCollection> trckToken_;  // token identifying product containing Tracks
   edm::EDGetTokenT<reco::RecoEcalCandidateCollection> ecalToken_;  // token identifying product containing SuperClusters
+  edm::EDGetTokenT<TkMuonCollection> tkMuonToken_;  // token identifying product containing L1 TkMuons
 
   double min_Pt_;  // min pt cut
 };

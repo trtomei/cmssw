@@ -147,11 +147,11 @@ bool HLTSinglet<T>::hltFilter(edm::Event& iEvent,
         ((max_Mass_ < 0.0) || (i->mass() <= max_Mass_)) && ((min_Eta_ < 0.0) || (std::abs(i->eta()) >= min_Eta_)) &&
         ((max_Eta_ < 0.0) || (std::abs(i->eta()) <= max_Eta_))) {
       n++;
-      ref = TRef(objects, distance(objects->begin(), i));
-      int tid = getObjectType<T>(*i);
-      if (tid == 0)
-        tid = triggerType_;
-      filterproduct.addObject(tid, ref);
+      //ref = TRef(objects, distance(objects->begin(), i));
+      //int tid = getObjectType<T>(*i);
+      //if (tid == 0)
+      //tid = triggerType_;
+      //filterproduct.addObject(tid, ref);
     }
   }
 
