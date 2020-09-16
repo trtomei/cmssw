@@ -15,13 +15,13 @@ namespace hltp2 {
                 Et * scalingConstants.m_constants.at(0).m_linear + 
                 Et * Et * scalingConstants.m_constants.at(0).m_quadratic);
     else if (std::abs(Eta) < 1.2)
-        return (scalingConstants.m_constants.at(0).m_constant +
-                Et * scalingConstants.m_constants.at(0).m_linear    +
-                Et * Et * scalingConstants.m_constants.at(0).m_quadratic);
+        return (scalingConstants.m_constants.at(1).m_constant +
+                Et * scalingConstants.m_constants.at(1).m_linear    +
+                Et * Et * scalingConstants.m_constants.at(1).m_quadratic);
     else
         return (scalingConstants.m_constants.at(2).m_constant +
                 Et * scalingConstants.m_constants.at(2).m_linear    +
-                Et * Et * scalingConstants.m_constants.at(1).m_quadratic);
+                Et * Et * scalingConstants.m_constants.at(2).m_quadratic);
     }
 
 }  // namespace hltp2
