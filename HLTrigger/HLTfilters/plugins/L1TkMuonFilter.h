@@ -9,13 +9,15 @@
  *  
  *
  *
- *  \author Simone gennai
- *
+ *  \author Simone Gennai
+ *  \author Thiago Tomei
  */
 
 #include "HLTrigger/HLTcore/interface/HLTFilter.h"
 #include "DataFormats/L1TCorrelator/interface/TkMuon.h"
 #include "DataFormats/L1TCorrelator/interface/TkMuonFwd.h"
+#include "CondFormats/HLTObjects/interface/L1TObjScalingConstants.h"
+#include "CondFormats/DataRecord/interface/L1TObjScalingRcd.h"
 
 //
 // class declaration
@@ -31,10 +33,12 @@ public:
                  trigger::TriggerFilterObjectWithRefs& filterproduct) const override;
 
 private:
-  edm::InputTag l1TkMuonTag_; //input tag for L1 Tk Muon product
-
+  edm::InputTag l1TkMuonTag_;   //input tag for L1 Tk Muon product
+  edm::ESInputTag l1TkMuonScalingTag_; //input tag for L1 Tk Muon scaling
   typedef std::vector<l1t::TkMuon> TkMuonCollection;
   edm::EDGetTokenT<TkMuonCollection> tkMuonToken_;  // token identifying product containing L1 TkMuons
+  edm::ESGetToken<L1TObjScalingConstants, L1TObjScalingRcd> scalingToken_; // token identifying the L1T scaling constants
+  //edm::ESHandle<L1TObjScalingConstants> scalingConstants_;
 
   double min_Pt_;  // min pt cut
   int    min_N_;   // min number of candidates above pT cut
