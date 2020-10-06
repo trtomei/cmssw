@@ -8,6 +8,7 @@
  */
 
 #include "L1TkMuonFilter.h"
+#include "HLTL1TScaling.h"
 #include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"
 
 #include "DataFormats/Common/interface/Handle.h"
@@ -16,6 +17,8 @@
 #include "DataFormats/HLTReco/interface/TriggerFilterObjectWithRefs.h"
 #include "DataFormats/HLTReco/interface/TriggerTypeDefs.h"
 
+#include "FWCore/Framework/interface/EventSetup.h"
+#include "FWCore/Framework/interface/EventSetupRecord.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 //
@@ -25,13 +28,15 @@
 L1TkMuonFilter::L1TkMuonFilter(const edm::ParameterSet& iConfig)
     : HLTFilter(iConfig),
       l1TkMuonTag_(iConfig.getParameter<edm::InputTag>("inputTag")),
-      tkMuonToken_(consumes<TkMuonCollection>(l1TkMuonTag_)){
-        min_Pt_= iConfig.getParameter<double>("MinPt");
-        min_N_ = iConfig.getParameter<int>("MinN");
-        min_Eta_=iConfig.getParameter<double>("MinEta");
-        max_Eta_=iConfig.getParameter<double>("MaxEta");
-        
-        } 
+      l1TkMuonScalingTag_(iConfig.getParameter<edm::ESInputTag>("esScalingTag")),
+      tkMuonToken_(consumes<TkMuonCollection>(l1TkMuonTag_)),
+      scalingToken_(esConsumes<L1TObjScalingConstants,L1TObjScalingRcd>(l1TkMuonScalingTag_))
+{
+  min_Pt_ = iConfig.getParameter<double>("MinPt");
+  min_N_ = iConfig.getParameter<int>("MinN");
+  min_Eta_ = iConfig.getParameter<double>("MinEta");
+  max_Eta_ = iConfig.getParameter<double>("MaxEta");
+}
 
 L1TkMuonFilter::~L1TkMuonFilter() = default;
 
@@ -45,15 +50,16 @@ void L1TkMuonFilter::fillDescriptions(edm::ConfigurationDescriptions& descriptio
   desc.add<double>("MinPt", -1.0);
   desc.add<double>("MinEta", -5.0);
   desc.add<double>("MaxEta", 5.0);
-  desc.add<int>("MinN",1);
-  desc.add<edm::InputTag>("inputTag",edm::InputTag("L1TkMuons"));
+  desc.add<int>("MinN", 1);
+  desc.add<edm::InputTag>("inputTag", edm::InputTag("L1TkMuons"));
+  desc.add<edm::ESInputTag>("esScalingTag", edm::ESInputTag("L1TkMuonScalingESSource",""));
   descriptions.add("L1TkMuonFilter", desc);
 }
 
 // ------------ method called to produce the data  ------------
 bool L1TkMuonFilter::hltFilter(edm::Event& iEvent,
-                            const edm::EventSetup& iSetup,
-                            trigger::TriggerFilterObjectWithRefs& filterproduct) const {
+                               const edm::EventSetup& iSetup,
+                               trigger::TriggerFilterObjectWithRefs& filterproduct) const {
   using namespace std;
   using namespace edm;
   using namespace reco;
@@ -71,32 +77,43 @@ bool L1TkMuonFilter::hltFilter(edm::Event& iEvent,
   // Specific filter code
 
   // get hold of products from Event
-
   Handle<l1t::TkMuonCollection> tkMuons;
+  iEvent.getByToken(tkMuonToken_, tkMuons);
+  
+  // get scaling constants
+  // do we *need* to get these every event? can't we cache them somewhere?
+  edm::ESHandle<L1TObjScalingConstants> scalingConstants_ = iSetup.getHandle(scalingToken_);
+  /*
+  std::cout << scalingConstants_->m_constants.at(0).m_constant << std::endl;
+  std::cout << scalingConstants_->m_constants.at(0).m_linear << std::endl;
+  std::cout << scalingConstants_->m_constants.at(0).m_quadratic << std::endl;
+  std::cout << scalingConstants_->m_constants.at(1).m_constant << std::endl;
+  std::cout << scalingConstants_->m_constants.at(1).m_linear << std::endl;
+  std::cout << scalingConstants_->m_constants.at(1).m_quadratic << std::endl;
+  std::cout << scalingConstants_->m_constants.at(2).m_constant << std::endl;
+  std::cout << scalingConstants_->m_constants.at(2).m_linear << std::endl;
+  std::cout << scalingConstants_->m_constants.at(2).m_quadratic << std::endl;
+  */
 
-  iEvent.getByToken(tkMuonToken_,tkMuons);
-
-
-// trkMuon
+  // trkMuon
   int ntrkmuon(0);
   auto atrkmuons(tkMuons->begin());
   auto otrkmuons(tkMuons->end());
   TkMuonCollection::const_iterator itkMuon;
   for (itkMuon = atrkmuons; itkMuon != otrkmuons; itkMuon++) {
-    if (itkMuon->pt() >= min_Pt_ && itkMuon->eta() <= max_Eta_ && itkMuon->eta() >= min_Eta_) {
+    double offlinePt = hltp2::TkMuonOfflineEt(itkMuon->pt(), itkMuon->eta(), *scalingConstants_);
+    if (offlinePt >= min_Pt_ && itkMuon->eta() <= max_Eta_ && itkMuon->eta() >= min_Eta_) {
       ntrkmuon++;
       l1t::TkMuonRef ref(l1t::TkMuonRef(tkMuons, distance(atrkmuons, itkMuon)));
-      filterproduct.addObject(-79, ref);
+      filterproduct.addObject(trigger::TriggerObjectType::TriggerL1tkMu, ref);
     }
   }
-
 
   // error case
   // filterproduct.addObject(0,Ref<vector<int> >());
 
   // final filter decision:
   const bool accept(ntrkmuon >= min_N_);
-
 
   // return with final filter decision
   return accept;

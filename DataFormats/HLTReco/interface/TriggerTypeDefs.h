@@ -61,10 +61,9 @@ namespace trigger {
     TriggerL1AsymHt = -111,
     TriggerL1AsymEtHF = -112,
     TriggerL1AsymHtHF = -113,
-    TriggerL1tkMu = -80, //Fase 2
-    TriggerL1tkEle = -79, //Fase 2
-    TriggerL1PFJet = -114, // phase-2
-
+    TriggerL1tkMu = -114, //Fase 2
+    TriggerL1tkEle = -115, //Fase 2
+    TriggerL1PFJet = -116, // phase-2
     /// HLT
 
     TriggerPhoton = +81,
