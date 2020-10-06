@@ -26,11 +26,13 @@
 #include "DataFormats/EgammaCandidates/interface/ElectronFwd.h"
 #include "DataFormats/RecoCandidate/interface/RecoChargedCandidateFwd.h"
 #include "DataFormats/JetReco/interface/CaloJetCollection.h"
+#include "DataFormats/JetReco/interface/PFJetCollection.h"
 #include "DataFormats/Candidate/interface/CompositeCandidateFwd.h"
 #include "DataFormats/METReco/interface/METFwd.h"
 #include "DataFormats/METReco/interface/CaloMETFwd.h"
 #include "DataFormats/METReco/interface/PFMETFwd.h"
 #include "DataFormats/HcalIsolatedTrack/interface/IsolatedPixelTrackCandidateFwd.h"
+#include "DataFormats/TauReco/interface/PFTauFwd.h"
 
 #include "DataFormats/L1Trigger/interface/L1HFRingsFwd.h"         // deprecate
 #include "DataFormats/L1Trigger/interface/L1EmParticleFwd.h"      // deprecate
@@ -47,9 +49,7 @@
 #include "DataFormats/L1Trigger/interface/Jet.h"
 #include "DataFormats/L1Trigger/interface/Tau.h"
 #include "DataFormats/L1Trigger/interface/EtSum.h"
-
-#include "DataFormats/JetReco/interface/PFJetCollection.h"
-#include "DataFormats/TauReco/interface/PFTauFwd.h"
+#include "DataFormats/L1TParticleFlow/interface/PFJet.h"
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/MessageLogger/interface/MessageDrop.h"
@@ -81,6 +81,7 @@ namespace trigger {
   typedef l1t::EGammaVectorRef VRl1tegamma;
   typedef l1t::TkElectronVectorRef VRl1tkele;
   typedef l1t::JetVectorRef VRl1tjet;
+  typedef l1t::PFJetVectorRef VRl1tpfjet;
   typedef l1t::TauVectorRef VRl1ttau;
   typedef l1t::EtSumVectorRef VRl1tetsum;
 
@@ -130,6 +131,8 @@ namespace trigger {
     VRl1tkele l1tkeleRefs_;
     Vids l1tjetIds_;
     VRl1tjet l1tjetRefs_;
+    Vids l1tpfjetIds_;
+    VRl1tpfjet l1tpfjetRefs_;
     Vids l1ttauIds_;
     VRl1ttau l1ttauRefs_;
     Vids l1tetsumIds_;
@@ -184,6 +187,8 @@ namespace trigger {
           l1tkeleRefs_(),
           l1tjetIds_(),
           l1tjetRefs_(),
+          l1tpfjetIds_(),
+          l1tpfjetRefs_(),
           l1ttauIds_(),
           l1ttauRefs_(),
           l1tetsumIds_(),
@@ -236,6 +241,8 @@ namespace trigger {
       std::swap(l1tkeleRefs_, other.l1tkeleRefs_);
       std::swap(l1tjetIds_, other.l1tjetIds_);
       std::swap(l1tjetRefs_, other.l1tjetRefs_);
+      std::swap(l1tpfjetIds_, other.l1tpfjetIds_);
+      std::swap(l1tpfjetRefs_, other.l1tpfjetRefs_);
       std::swap(l1ttauIds_, other.l1ttauIds_);
       std::swap(l1ttauRefs_, other.l1ttauRefs_);
       std::swap(l1tetsumIds_, other.l1tetsumIds_);
@@ -322,6 +329,10 @@ namespace trigger {
     void addObject(int id, const l1t::JetRef& ref) {
       l1tjetIds_.push_back(id);
       l1tjetRefs_.push_back(ref);
+    }
+    void addObject(int id, const l1t::PFJetRef& ref) {
+      l1tpfjetIds_.push_back(id);
+      l1tpfjetRefs_.push_back(ref);
     }
     void addObject(int id, const l1t::TauRef& ref) {
       l1ttauIds_.push_back(id);
@@ -447,6 +458,12 @@ namespace trigger {
       l1tjetIds_.insert(l1tjetIds_.end(), ids.begin(), ids.end());
       l1tjetRefs_.insert(l1tjetRefs_.end(), refs.begin(), refs.end());
       return l1tjetIds_.size();
+    }
+    size_type addObjects(const Vids& ids, const VRl1tpfjet& refs) {
+      assert(ids.size() == refs.size());
+      l1tpfjetIds_.insert(l1tpfjetIds_.end(), ids.begin(), ids.end());
+      l1tpfjetRefs_.insert(l1tpfjetRefs_.end(), refs.begin(), refs.end());
+      return l1tpfjetIds_.size();
     }
     size_type addObjects(const Vids& ids, const VRl1ttau& refs) {
       assert(ids.size() == refs.size());
@@ -1115,6 +1132,42 @@ namespace trigger {
       return;
     }
 
+    void getObjects(Vids& ids, VRl1tpfjet& refs) const { getObjects(ids, refs, 0, l1tpfjetIds_.size()); }
+    void getObjects(Vids& ids, VRl1tpfjet& refs, size_type begin, size_type end) const {
+      assert(begin <= end);
+      assert(end <= l1tpfjetIds_.size());
+      const size_type n(end - begin);
+      ids.resize(n);
+      refs.resize(n);
+      size_type j(0);
+      for (size_type i = begin; i != end; ++i) {
+        ids[j] = l1tpfjetIds_[i];
+        refs[j] = l1tpfjetRefs_[i];
+        ++j;
+      }
+    }
+    void getObjects(int id, VRl1tpfjet& refs) const { getObjects(id, refs, 0, l1tpfjetIds_.size()); }
+    void getObjects(int id, VRl1tpfjet& refs, size_type begin, size_type end) const {
+      assert(begin <= end);
+      assert(end <= l1tpfjetIds_.size());
+      size_type n(0);
+      for (size_type i = begin; i != end; ++i) {
+        if (id == l1tpfjetIds_[i]) {
+          ++n;
+        }
+      }
+      refs.resize(n);
+      size_type j(0);
+      for (size_type i = begin; i != end; ++i) {
+        if (id == l1tpfjetIds_[i]) {
+          refs[j] = l1tpfjetRefs_[i];
+          ++j;
+        }
+      }
+      return;
+    }
+
+
     void getObjects(Vids& ids, VRl1ttau& refs) const { getObjects(ids, refs, 0, l1ttauIds_.size()); }
     void getObjects(Vids& ids, VRl1ttau& refs, size_type begin, size_type end) const {
       assert(begin <= end);
@@ -1358,7 +1411,7 @@ namespace trigger {
     size_type l1tmuonSize() const { return l1tmuonIds_.size(); }
     const Vids& l1tmuonIds() const { return l1tmuonIds_; }
     const VRl1tmuon& l1tmuonRefs() const { return l1tmuonRefs_; }
-    
+
     size_type l1tkmuonSize() const { return l1tkmuonIds_.size(); }
     const Vids& l1tkmuonIds() const { return l1tkmuonIds_; }
     const VRl1tkmuon& l1tkmuonRefs() const { return l1tkmuonRefs_; }
@@ -1374,6 +1427,10 @@ namespace trigger {
     size_type l1tjetSize() const { return l1tjetIds_.size(); }
     const Vids& l1tjetIds() const { return l1tjetIds_; }
     const VRl1tjet& l1tjetRefs() const { return l1tjetRefs_; }
+
+    size_type l1tpfjetSize() const { return l1tpfjetIds_.size(); }
+    const Vids& l1tpfjetIds() const { return l1tpfjetIds_; }
+    const VRl1tpfjet& l1tpfjetRefs() const { return l1tpfjetRefs_; }
 
     size_type l1ttauSize() const { return l1ttauIds_.size(); }
     const Vids& l1ttauIds() const { return l1ttauIds_; }
