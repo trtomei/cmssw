@@ -1,4 +1,4 @@
-/** \class L1TkMuonFilter
+/** \class L1PFJetFilter
  *
  * See header file for documentation
  *
@@ -7,7 +7,7 @@
  *
  */
 
-#include "L1TkMuonFilter.h"
+#include "L1PFJetFilter.h"
 #include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"
 
 #include "DataFormats/Common/interface/Handle.h"
@@ -24,40 +24,40 @@
 // constructors and destructor
 //
 
-L1TkMuonFilter::L1TkMuonFilter(const edm::ParameterSet& iConfig)
+L1PFJetFilter::L1PFJetFilter(const edm::ParameterSet& iConfig)
     : HLTFilter(iConfig),
-      l1TkMuonTag_(iConfig.getParameter<edm::InputTag>("inputTag")),
-      l1TkMuonScalingTag_(iConfig.getParameter<edm::ESInputTag>("esScalingTag")),
-      tkMuonToken_(consumes<TkMuonCollection>(l1TkMuonTag_)),
-      scalingToken_(esConsumes<L1TObjScalingConstants, L1TObjScalingRcd>(l1TkMuonScalingTag_)) {
+      l1PFJetTag_(iConfig.getParameter<edm::InputTag>("inputTag")),
+      l1PFJetScalingTag_(iConfig.getParameter<edm::ESInputTag>("esScalingTag")),
+      pfJetToken_(consumes<l1t::PFJetCollection>(l1PFJetTag_)),
+      scalingToken_(esConsumes<L1TObjScalingConstants, L1TObjScalingRcd>(l1PFJetScalingTag_)) {
   min_Pt_ = iConfig.getParameter<double>("MinPt");
   min_N_ = iConfig.getParameter<int>("MinN");
   min_Eta_ = iConfig.getParameter<double>("MinEta");
   max_Eta_ = iConfig.getParameter<double>("MaxEta");
 }
 
-L1TkMuonFilter::~L1TkMuonFilter() = default;
+L1PFJetFilter::~L1PFJetFilter() = default;
 
 //
 // member functions
 //
 
-void L1TkMuonFilter::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+void L1PFJetFilter::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
   makeHLTFilterDescription(desc);
   desc.add<double>("MinPt", -1.0);
   desc.add<double>("MinEta", -5.0);
   desc.add<double>("MaxEta", 5.0);
   desc.add<int>("MinN", 1);
-  desc.add<edm::InputTag>("inputTag", edm::InputTag("L1TkMuons"));
-  desc.add<edm::ESInputTag>("esScalingTag", edm::ESInputTag("L1TScalingESSource", "L1TkMuonScaling"));
-  descriptions.add("L1TkMuonFilter", desc);
+  desc.add<edm::InputTag>("inputTag", edm::InputTag("ak4PFL1PuppiCorrected"));
+  desc.add<edm::ESInputTag>("esScalingTag", edm::ESInputTag("L1TScalingESSource", "L1PFJetScaling"));
+  descriptions.add("L1PFJetFilter", desc);
 }
 
 // ------------ method called to produce the data  ------------
-bool L1TkMuonFilter::hltFilter(edm::Event& iEvent,
-                               const edm::EventSetup& iSetup,
-                               trigger::TriggerFilterObjectWithRefs& filterproduct) const {
+bool L1PFJetFilter::hltFilter(edm::Event& iEvent,
+                              const edm::EventSetup& iSetup,
+                              trigger::TriggerFilterObjectWithRefs& filterproduct) const {
   using namespace std;
   using namespace edm;
   using namespace reco;
@@ -69,20 +69,20 @@ bool L1TkMuonFilter::hltFilter(edm::Event& iEvent,
 
   // The filter object
   if (saveTags()) {
-    filterproduct.addCollectionTag(l1TkMuonTag_);
+    filterproduct.addCollectionTag(l1PFJetTag_);
   }
 
   // Specific filter code
 
   // get hold of products from Event
-  Handle<l1t::TkMuonCollection> tkMuons;
-  iEvent.getByToken(tkMuonToken_, tkMuons);
+  Handle<l1t::PFJetCollection> pfJets;
+  iEvent.getByToken(pfJetToken_, pfJets);
 
   // get scaling constants
   // do we *need* to get these every event? can't we cache them somewhere?
   edm::ESHandle<L1TObjScalingConstants> scalingConstants_ = iSetup.getHandle(scalingToken_);
 
-  // std::cout << "Je suis muon" << std::endl;
+  // std::cout << "Je suis PFjet" << std::endl;
   // std::cout << scalingConstants_->m_constants.at(0).m_constant << std::endl;
   // std::cout << scalingConstants_->m_constants.at(0).m_linear << std::endl;
   // std::cout << scalingConstants_->m_constants.at(0).m_quadratic << std::endl;
@@ -93,16 +93,15 @@ bool L1TkMuonFilter::hltFilter(edm::Event& iEvent,
   // std::cout << scalingConstants_->m_constants.at(2).m_linear << std::endl;
   // std::cout << scalingConstants_->m_constants.at(2).m_quadratic << std::endl;
 
-  // trkMuon
-  int ntrkmuon(0);
-  auto atrkmuons(tkMuons->begin());
-  auto otrkmuons(tkMuons->end());
-  TkMuonCollection::const_iterator itkMuon;
-  for (itkMuon = atrkmuons; itkMuon != otrkmuons; itkMuon++) {
-    double offlinePt = this->TkMuonOfflineEt(itkMuon->pt(), itkMuon->eta(), *scalingConstants_);
-    if (offlinePt >= min_Pt_ && itkMuon->eta() <= max_Eta_ && itkMuon->eta() >= min_Eta_) {
-      ntrkmuon++;
-      l1t::TkMuonRef ref(l1t::TkMuonRef(tkMuons, distance(atrkmuons, itkMuon)));
+  int npfjet(0);
+  auto apfjets(pfJets->begin());
+  auto opfjets(pfJets->end());
+  l1t::PFJetCollection::const_iterator ipfJet;
+  for (ipfJet = apfjets; ipfJet != opfjets; ipfJet++) {
+    double offlinePt = this->PFJetOfflineEt(ipfJet->pt(), ipfJet->eta(), *scalingConstants_);
+    if (offlinePt >= min_Pt_ && ipfJet->eta() <= max_Eta_ && ipfJet->eta() >= min_Eta_) {
+      npfjet++;
+      l1t::PFJetRef ref(l1t::PFJetRef(pfJets, distance(apfjets, ipfJet)));
       filterproduct.addObject(trigger::TriggerObjectType::TriggerL1tkMu, ref);
     }
   }
@@ -111,17 +110,17 @@ bool L1TkMuonFilter::hltFilter(edm::Event& iEvent,
   // filterproduct.addObject(0,Ref<vector<int> >());
 
   // final filter decision:
-  const bool accept(ntrkmuon >= min_N_);
+  const bool accept(npfjet >= min_N_);
 
   // return with final filter decision
   return accept;
 }
 
-double L1TkMuonFilter::TkMuonOfflineEt(double Et, double Eta, const L1TObjScalingConstants& scalingConstants) const {
-  if (std::abs(Eta) < 0.9)
+double L1PFJetFilter::PFJetOfflineEt(double Et, double Eta, const L1TObjScalingConstants& scalingConstants) const {
+  if (std::abs(Eta) < 1.5)
     return (scalingConstants.m_constants.at(0).m_constant + Et * scalingConstants.m_constants.at(0).m_linear +
             Et * Et * scalingConstants.m_constants.at(0).m_quadratic);
-  else if (std::abs(Eta) < 1.2)
+  else if (std::abs(Eta) < 2.4)
     return (scalingConstants.m_constants.at(1).m_constant + Et * scalingConstants.m_constants.at(1).m_linear +
             Et * Et * scalingConstants.m_constants.at(1).m_quadratic);
   else
