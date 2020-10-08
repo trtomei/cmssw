@@ -8,6 +8,7 @@
 #include "DataFormats/L1Trigger/interface/L1EtMissParticle.h"
 #include "DataFormats/L1Trigger/interface/L1JetParticle.h"
 #include "DataFormats/L1Trigger/interface/L1MuonParticle.h"
+#include "DataFormats/L1TParticleFlow/interface/PFJet.h"
 #include "DataFormats/RecoCandidate/interface/RecoEcalCandidate.h"
 #include "DataFormats/RecoCandidate/interface/RecoEcalCandidateFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Electron.h"
@@ -29,7 +30,6 @@
 #include "DataFormats/TauReco/interface/PFTau.h"
 #include "DataFormats/TauReco/interface/PFTauFwd.h"
 #include "DataFormats/JetReco/interface/PFJet.h"
-#include "DataFormats/JetReco/interface/PFJetCollection.h"
 
 #include "DataFormats/HLTReco/interface/TriggerTypeDefs.h"
 
@@ -38,6 +38,10 @@ using namespace trigger;
 
 #include "HLTSinglet.h"
 #include "HLTSinglet.cc"
+
+#include "L1TkMuonFilter.h"
+#include "L1TkEleFilter.h"
+#include "L1PFJetFilter.h"
 
 // filter for HLT candidates
 typedef HLTSinglet<RecoEcalCandidate> HLT1Photon;
@@ -61,6 +65,8 @@ typedef HLTSinglet<l1extra::L1EtMissParticle>
 typedef HLTSinglet<l1extra::L1JetParticle>
     HLTLevel1Jet;  // the actual type is ovrridden object-by-object (TriggerL1CenJet, TriggerL1ForJet or TriggerL1TauJet)
 typedef HLTSinglet<l1extra::L1MuonParticle> HLTLevel1Muon;
+
+typedef HLTSinglet<l1t::PFJet> HLTLevel1PFJet;
 
 #include "HLTSmartSinglet.h"
 #include "HLTSmartSinglet.cc"
@@ -113,10 +119,16 @@ typedef HLTDoublet<RecoChargedCandidate, PFMET> HLT2MuonPFMET;
 typedef HLTDoublet<RecoEcalCandidate, MET> HLT2PhotonMET;
 typedef HLTDoublet<RecoEcalCandidate, PFMET> HLT2PhotonPFMET;
 
+// filters for L1 candidates
+typedef HLTDoublet<l1t::PFJet, l1t::PFJet> HLTLevel1PFJetPFJet;
+typedef HLTDoublet<l1t::PFJet, PFMET> HLTLevel1PFJetPFMET;
+
 DEFINE_FWK_MODULE(HLTBool);
 DEFINE_FWK_MODULE(HLTFiltCand);
 DEFINE_FWK_MODULE(HLTHighLevel);
-
+DEFINE_FWK_MODULE(L1TkMuonFilter);
+DEFINE_FWK_MODULE(L1TkEleFilter);
+DEFINE_FWK_MODULE(L1PFJetFilter);
 DEFINE_FWK_MODULE(HLT2CaloJetCaloJet);
 DEFINE_FWK_MODULE(HLT2CaloJetCaloMET);
 DEFINE_FWK_MODULE(HLT2CaloJetMET);
@@ -156,6 +168,9 @@ DEFINE_FWK_MODULE(HLTLevel1EG);
 DEFINE_FWK_MODULE(HLTLevel1MET);
 DEFINE_FWK_MODULE(HLTLevel1Jet);
 DEFINE_FWK_MODULE(HLTLevel1Muon);
+DEFINE_FWK_MODULE(HLTLevel1PFJet);
+DEFINE_FWK_MODULE(HLTLevel1PFJetPFJet);
+DEFINE_FWK_MODULE(HLTLevel1PFJetPFMET);
 
 DEFINE_FWK_MODULE(HLTGlobalSumsPFMET);
 DEFINE_FWK_MODULE(HLTGlobalSumsCaloMET);
