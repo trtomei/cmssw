@@ -47,13 +47,13 @@ process.l1tEle7 = cms.EDFilter(
     MinPt=cms.double(7.0),
     MinEta=cms.double(-2.4),
     MaxEta=cms.double(2.4),
-    inputTag1 = cms.InputTag("L1TkElectronsEllipticMatchCrystal","EG"), 
-    inputTag2 = cms.InputTag("L1TkElectronsEllipticMatchHGC","EG"), 
-    esScalingTag = cms.ESInputTag("L1TScalingESSource","L1TkEleScaling"),
-    Quality1 = cms.int32(2), #0x2
-    Quality2 = cms.int32(5),
-    Qual1IsMask = cms.bool(True),
-    Qual2IsMask = cms.bool(False),
+    inputTag1=cms.InputTag("L1TkElectronsEllipticMatchCrystal", "EG"),
+    inputTag2=cms.InputTag("L1TkElectronsEllipticMatchHGC", "EG"),
+    esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1TkEleScaling"),
+    Quality1=cms.int32(2),  # 0x2
+    Quality2=cms.int32(5),
+    Qual1IsMask=cms.bool(True),
+    Qual2IsMask=cms.bool(False),
 )
 
 process.l1tPFJet64 = cms.EDFilter(
@@ -61,8 +61,37 @@ process.l1tPFJet64 = cms.EDFilter(
     MinPt=cms.double(64.0),
 )
 
+process.L1PFHtMht = cms.EDProducer(
+    "HLTHtMhtProducer",
+    jetsLabel=cms.InputTag("ak4PFL1PuppiCorrected"),
+    minPtJetHt=cms.double(30),
+    maxEtaJetHt=cms.double(2.4),
+)
+
+### Notice that there is no MHT seed in the Phase-II Level-1 Menu...
+process.l1tPFMht20 = cms.EDFilter(
+    "L1PFEnergySumFilter",
+    inputTag=cms.InputTag("L1PFHtMht"),
+    esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
+    MinPt=cms.double(20.0),
+    TypeOfSum=cms.string("MHT"),
+)
+
+process.l1tPFHt20 = cms.EDFilter(
+    "L1PFEnergySumFilter",
+    inputTag=cms.InputTag("L1PFHtMht"),
+    esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
+    MinPt=cms.double(20.0),
+    TypeOfSum=cms.string("HT"),
+)
+
 process.hltTestSeq = cms.Sequence(
-    cms.ignore(process.l1tMuon7) + cms.ignore(process.l1tPFJet64) + cms.ignore(process.l1tEle7)
+    process.L1PFHtMht
+    + cms.ignore(process.l1tMuon7)
+    + cms.ignore(process.l1tPFJet64)
+    + cms.ignore(process.l1tEle7)
+    + cms.ignore(process.l1tPFMht20)
+    + cms.ignore(process.l1tPFHt20)
 )
 
 process.HLT_Test_Path = cms.Path(process.hltTestSeq)
@@ -71,7 +100,7 @@ process.source = cms.Source(
     "PoolSource",
     fileNames=cms.untracked.vstring(
         "/store/mc/Phase2HLTTDRSummer20ReRECOMiniAOD/DYToLL_M-50_TuneCP5_14TeV-pythia8/FEVT/PU200_pilot_111X_mcRun4_realistic_T15_v1-v1/270000/FF7BF0E2-1380-2D48-BB19-F79E6907CD5D.root",
-#        "/store/mc/Phase2HLTTDRSummer20ReRECOMiniAOD/SingleElectron_PT2to200/FEVT/PU200_111X_mcRun4_realistic_T15_v1_ext2-v1/270000/0064D31F-F48B-3144-8CB9-17F820065E01.root",
+        #        "/store/mc/Phase2HLTTDRSummer20ReRECOMiniAOD/SingleElectron_PT2to200/FEVT/PU200_111X_mcRun4_realistic_T15_v1_ext2-v1/270000/0064D31F-F48B-3144-8CB9-17F820065E01.root",
     ),
 )
 
