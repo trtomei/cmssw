@@ -33,6 +33,16 @@ process.L1TScalingESSource = cms.ESSource(
             tag=cms.string("L1TkElectronScaling"),
             label=cms.untracked.string("L1TkEleScaling"),
         ),
+        cms.PSet(
+            record=cms.string("L1TObjScalingRcd"),
+            tag=cms.string("L1PuppiMETScaling"),
+            label=cms.untracked.string("L1PuppiMETScaling"),
+        ),
+        cms.PSet(
+            record=cms.string("L1TObjScalingRcd"),
+            tag=cms.string("L1PFHTScaling"),
+            label=cms.untracked.string("L1PFHTScaling"),
+        ),
     ),
 )
 process.es_prefer_l1tscaling = cms.ESPrefer("PoolDBESSource", "L1TScalingESSource")
@@ -68,30 +78,52 @@ process.L1PFHtMht = cms.EDProducer(
     maxEtaJetHt=cms.double(2.4),
 )
 
+process.L1PFMetredux = cms.EDProducer(
+    "HLTHtMhtProducer",
+    jetsLabel=cms.InputTag("l1PFMetPuppi"),
+    minPtJetMht=cms.double(0.0),
+    maxEtaJetMht=cms.double(9999.9),
+)
+
 ### Notice that there is no MHT seed in the Phase-II Level-1 Menu...
-process.l1tPFMht20 = cms.EDFilter(
+# Possible choices for TypeOfSum are: MET, MHT, ETT, HT
+# but notice that if you are using a MET seed you
+# should probably use the precomputed one.
+
+process.l1tPFMht120 = cms.EDFilter(
     "L1PFEnergySumFilter",
     inputTag=cms.InputTag("L1PFHtMht"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
-    MinPt=cms.double(20.0),
+    MinPt=cms.double(120.0),
     TypeOfSum=cms.string("MHT"),
 )
 
-process.l1tPFHt20 = cms.EDFilter(
+process.l1tPFHt120 = cms.EDFilter(
     "L1PFEnergySumFilter",
     inputTag=cms.InputTag("L1PFHtMht"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
-    MinPt=cms.double(20.0),
+    MinPt=cms.double(120.0),
     TypeOfSum=cms.string("HT"),
 )
 
+process.l1tPFMet120 = cms.EDFilter(
+    "L1PFEnergySumFilter",
+    inputTag=cms.InputTag("L1PFMetredux"),
+    esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PuppiMETScaling"),
+    MinPt=cms.double(120.0),
+    TypeOfSum=cms.string("MET"),
+)
+
+
 process.hltTestSeq = cms.Sequence(
     process.L1PFHtMht
+    + process.L1PFMetredux
     + cms.ignore(process.l1tMuon7)
     + cms.ignore(process.l1tPFJet64)
     + cms.ignore(process.l1tEle7)
-    + cms.ignore(process.l1tPFMht20)
-    + cms.ignore(process.l1tPFHt20)
+    + cms.ignore(process.l1tPFMht120)
+    + cms.ignore(process.l1tPFHt120)
+    + cms.ignore(process.l1tPFMet120)
 )
 
 process.HLT_Test_Path = cms.Path(process.hltTestSeq)
