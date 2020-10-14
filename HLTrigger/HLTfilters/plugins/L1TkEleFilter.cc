@@ -119,8 +119,6 @@ bool L1TkEleFilter::hltFilter(edm::Event& iEvent,
       filterproduct.addObject(trigger::TriggerObjectType::TriggerL1tkEle, ref1);
     }
   }
-  // final filter decision:
-  const bool accept(ntrkEle >= min_N_);
 
   atrkEles = tkEles2->begin();
   otrkEles = tkEles2->end();
@@ -138,10 +136,11 @@ bool L1TkEleFilter::hltFilter(edm::Event& iEvent,
       filterproduct.addObject(trigger::TriggerObjectType::TriggerL1tkEle, ref2);
     }
   }
-  const bool accept2(ntrkEle >= min_N_);
 
+  // final filter decision:
+  const bool accept(ntrkEle >= min_N_);
   // return with final filter decision
-  return (accept and accept2);
+  return accept;
 }
 
 double L1TkEleFilter::TkEleOfflineEt(double Et, double Eta, const L1TObjScalingConstants& scalingConstants) const {
