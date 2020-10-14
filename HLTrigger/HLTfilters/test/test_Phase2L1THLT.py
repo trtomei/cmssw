@@ -52,6 +52,7 @@ process.l1tMuon7 = cms.EDFilter(
     MinPt=cms.double(7.0),
 )
 
+### Maybe this could be superseded by the L1TkIsoEleFilter ?
 process.l1tEle7 = cms.EDFilter(
     "L1TkEleFilter",
     MinPt=cms.double(7.0),
@@ -63,6 +64,24 @@ process.l1tEle7 = cms.EDFilter(
     Quality1=cms.int32(2),  # 0x2
     Quality2=cms.int32(5),
     Qual1IsMask=cms.bool(True),
+    Qual2IsMask=cms.bool(False),
+)
+
+process.l1tIsoEle7 = cms.EDFilter(
+    "L1TkIsoEleFilter",
+    MinPt=cms.double(7.0),
+    MinEta=cms.double(-2.4),
+    MaxEta=cms.double(2.4),
+    inputTag1=cms.InputTag("L1TkElectronsEllipticMatchCrystal", "EG"),
+    inputTag2=cms.InputTag("L1TkElectronsEllipticMatchHGC", "EG"),
+    esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1TkEleScaling"),
+    EtaBinsForIsolation=cms.vdouble(0.0, 1.479, 9999.9),
+    TrkIsolation=cms.vdouble(0.10, 0.125),
+    ApplyQual1=cms.bool(False),
+    ApplyQual2=cms.bool(True),
+    Quality1=cms.int32(-1),
+    Quality2=cms.int32(5),
+    Qual1IsMask=cms.bool(False),
     Qual2IsMask=cms.bool(False),
 )
 
@@ -114,6 +133,38 @@ process.l1tPFMet120 = cms.EDFilter(
     TypeOfSum=cms.string("MET"),
 )
 
+process.l1tDoubleMuon7 = cms.EDFilter(
+    "L1TkMuonFilter",
+    MinPt=cms.double(7.0),
+    MinN=cms.int32(2),
+    MinEta=cms.double(-2.4),
+    MaxEta=cms.double(2.4),
+)
+
+process.l1tSingleMuon15 = cms.EDFilter(
+    "L1TkMuonFilter",
+    MinPt=cms.double(15.0),
+    MinN=cms.int32(2),
+    MinEta=cms.double(-2.4),
+    MaxEta=cms.double(2.4),
+)
+
+# Not working yet
+process.l1tDoubleMuonPt15PtDZ1p0 = cms.EDFilter(
+    "L1T2TkMuonTkMuonDZ",
+    saveTags=cms.bool(True),
+    originTag1=cms.VInputTag("L1TkMuons"),
+    originTag2=cms.VInputTag("L1TkMuons"),
+    MinPixHitsForDZ=cms.int32(0),
+    MinN=cms.int32(1),
+    triggerType1=cms.int32(-114),
+    triggerType2=cms.int32(-114),
+    MinDR=cms.double(0.001),
+    MaxDZ=cms.double(9999.0),
+    inputTag1=cms.InputTag("l1tDoubleMuon7"),
+    checkSC=cms.bool(False),
+    inputTag2=cms.InputTag("l1tSingleMuon15"),
+)
 
 process.hltTestSeq = cms.Sequence(
     process.L1PFHtMht
@@ -121,18 +172,23 @@ process.hltTestSeq = cms.Sequence(
     + cms.ignore(process.l1tMuon7)
     + cms.ignore(process.l1tPFJet64)
     + cms.ignore(process.l1tEle7)
+    + cms.ignore(process.l1tIsoEle7)
     + cms.ignore(process.l1tPFMht120)
     + cms.ignore(process.l1tPFHt120)
     + cms.ignore(process.l1tPFMet120)
+    + process.l1tDoubleMuon7
 )
 
+# process.L1_DoubleMuon_15_17 = cms.Path(
+#    process.l1tDoubleMuon7 + process.l1tSingleMuon15 + process.l1tDoubleMuonPt15PtDZ1p0
+# )
 process.HLT_Test_Path = cms.Path(process.hltTestSeq)
 
 process.source = cms.Source(
     "PoolSource",
     fileNames=cms.untracked.vstring(
         "/store/mc/Phase2HLTTDRSummer20ReRECOMiniAOD/DYToLL_M-50_TuneCP5_14TeV-pythia8/FEVT/PU200_pilot_111X_mcRun4_realistic_T15_v1-v1/270000/FF7BF0E2-1380-2D48-BB19-F79E6907CD5D.root",
-        #        "/store/mc/Phase2HLTTDRSummer20ReRECOMiniAOD/SingleElectron_PT2to200/FEVT/PU200_111X_mcRun4_realistic_T15_v1_ext2-v1/270000/0064D31F-F48B-3144-8CB9-17F820065E01.root",
+        # "/store/mc/Phase2HLTTDRSummer20ReRECOMiniAOD/SingleElectron_PT2to200/FEVT/PU200_111X_mcRun4_realistic_T15_v1_ext2-v1/270000/0064D31F-F48B-3144-8CB9-17F820065E01.root",
     ),
 )
 
