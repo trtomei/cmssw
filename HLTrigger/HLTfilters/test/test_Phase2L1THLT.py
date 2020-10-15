@@ -35,6 +35,16 @@ process.L1TScalingESSource = cms.ESSource(
         ),
         cms.PSet(
             record=cms.string("L1TObjScalingRcd"),
+            tag=cms.string("L1TkIsoElectronScaling"),
+            label=cms.untracked.string("L1TkIsoEleScaling"),
+        ),
+        cms.PSet(
+            record=cms.string("L1TObjScalingRcd"),
+            tag=cms.string("L1TkIsoPhotonScaling"),
+            label=cms.untracked.string("L1TkIsoPhoScaling"),
+        ),
+        cms.PSet(
+            record=cms.string("L1TObjScalingRcd"),
             tag=cms.string("L1PuppiMETScaling"),
             label=cms.untracked.string("L1PuppiMETScaling"),
         ),
@@ -74,14 +84,32 @@ process.l1tIsoEle7 = cms.EDFilter(
     MaxEta=cms.double(2.4),
     inputTag1=cms.InputTag("L1TkElectronsEllipticMatchCrystal", "EG"),
     inputTag2=cms.InputTag("L1TkElectronsEllipticMatchHGC", "EG"),
-    esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1TkEleScaling"),
+    esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1TkIsoEleScaling"),
     EtaBinsForIsolation=cms.vdouble(0.0, 1.479, 9999.9),
-    TrkIsolation=cms.vdouble(0.10, 0.125),
+    TrkIsolation=cms.vdouble(0.12, 0.2),
     ApplyQual1=cms.bool(False),
     ApplyQual2=cms.bool(True),
     Quality1=cms.int32(-1),
     Quality2=cms.int32(5),
     Qual1IsMask=cms.bool(False),
+    Qual2IsMask=cms.bool(False),
+)
+
+process.l1tIsoPho7 = cms.EDFilter(
+    "L1TkEmFilter",
+    MinPt=cms.double(7.0),
+    MinEta=cms.double(-2.4),
+    MaxEta=cms.double(2.4),
+    inputTag1=cms.InputTag("L1TkPhotonsCrystal", "EG"),
+    inputTag2=cms.InputTag("L1TkPhotonsHGC", "EG"),
+    esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1TkIsoPhoScaling"),
+    EtaBinsForIsolation=cms.vdouble(0.0, 1.479, 9999.9),
+    TrkIsolation=cms.vdouble(0.28, 0.35),
+    ApplyQual1=cms.bool(False),
+    ApplyQual2=cms.bool(True),
+    Quality1=cms.int32(2),  # 0x2 "second bit"
+    Quality2=cms.int32(5),
+    Qual1IsMask=cms.bool(True),
     Qual2IsMask=cms.bool(False),
 )
 
@@ -109,6 +137,7 @@ process.L1PFMetredux = cms.EDProducer(
 # but notice that if you are using a MET seed you
 # should probably use the precomputed one.
 
+# We don't have scaling for MHT...
 process.l1tPFMht120 = cms.EDFilter(
     "L1PFEnergySumFilter",
     inputTag=cms.InputTag("L1PFHtMht"),
@@ -173,6 +202,7 @@ process.hltTestSeq = cms.Sequence(
     + cms.ignore(process.l1tPFJet64)
     + cms.ignore(process.l1tEle7)
     + cms.ignore(process.l1tIsoEle7)
+    + cms.ignore(process.l1tIsoPho7)
     + cms.ignore(process.l1tPFMht120)
     + cms.ignore(process.l1tPFHt120)
     + cms.ignore(process.l1tPFMet120)
