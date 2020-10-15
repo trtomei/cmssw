@@ -62,7 +62,6 @@ process.l1tMuon7 = cms.EDFilter(
     MinPt=cms.double(7.0),
 )
 
-### Maybe this could be superseded by the L1TkIsoEleFilter ?
 process.l1tEle7 = cms.EDFilter(
     "L1TkEleFilter",
     MinPt=cms.double(7.0),
@@ -71,6 +70,10 @@ process.l1tEle7 = cms.EDFilter(
     inputTag1=cms.InputTag("L1TkElectronsEllipticMatchCrystal", "EG"),
     inputTag2=cms.InputTag("L1TkElectronsEllipticMatchHGC", "EG"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1TkEleScaling"),
+    EtaBinsForIsolation=cms.vdouble(0.0, 9999.9),
+    TrkIsolation=cms.vdouble(99999.9),  # No isolation
+    ApplyQual1=cms.bool(True),
+    ApplyQual2=cms.bool(True),
     Quality1=cms.int32(2),  # 0x2
     Quality2=cms.int32(5),
     Qual1IsMask=cms.bool(True),
@@ -78,7 +81,7 @@ process.l1tEle7 = cms.EDFilter(
 )
 
 process.l1tIsoEle7 = cms.EDFilter(
-    "L1TkIsoEleFilter",
+    "L1TkEleFilter",
     MinPt=cms.double(7.0),
     MinEta=cms.double(-2.4),
     MaxEta=cms.double(2.4),
