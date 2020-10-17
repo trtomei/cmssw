@@ -1,4 +1,4 @@
-/** \class L1TkIsoEleFilter
+/** \class L1TkEmFilter
  *
  * See header file for documentation
  *
@@ -7,7 +7,7 @@
  *
  */
 
-#include "L1TkIsoEleFilter.h"
+#include "L1TkEmFilter.h"
 #include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"
 
 #include "DataFormats/Common/interface/Handle.h"
@@ -25,14 +25,14 @@
 // constructors and destructor
 //
 
-L1TkIsoEleFilter::L1TkIsoEleFilter(const edm::ParameterSet& iConfig)
+L1TkEmFilter::L1TkEmFilter(const edm::ParameterSet& iConfig)
     : HLTFilter(iConfig),
-      l1TkEleTag1_(iConfig.getParameter<edm::InputTag>("inputTag1")),
-      l1TkEleTag2_(iConfig.getParameter<edm::InputTag>("inputTag2")),
-      l1TkEleScalingTag_(iConfig.getParameter<edm::ESInputTag>("esScalingTag")),
-      tkEleToken1_(consumes<TkEleCollection>(l1TkEleTag1_)),
-      tkEleToken2_(consumes<TkEleCollection>(l1TkEleTag2_)),
-      scalingToken_(esConsumes<L1TObjScalingConstants, L1TObjScalingRcd>(l1TkEleScalingTag_)) {
+      l1TkEmTag1_(iConfig.getParameter<edm::InputTag>("inputTag1")),
+      l1TkEmTag2_(iConfig.getParameter<edm::InputTag>("inputTag2")),
+      l1TkEmScalingTag_(iConfig.getParameter<edm::ESInputTag>("esScalingTag")),
+      tkEmToken1_(consumes<TkEmCollection>(l1TkEmTag1_)),
+      tkEmToken2_(consumes<TkEmCollection>(l1TkEmTag2_)),
+      scalingToken_(esConsumes<L1TObjScalingConstants, L1TObjScalingRcd>(l1TkEmScalingTag_)) {
   min_Pt_ = iConfig.getParameter<double>("MinPt");
   min_N_ = iConfig.getParameter<int>("MinN");
   min_Eta_ = iConfig.getParameter<double>("MinEta");
@@ -51,22 +51,22 @@ L1TkIsoEleFilter::L1TkIsoEleFilter(const edm::ParameterSet& iConfig)
         << "Vector of isolation values should have same size of vector of eta bins plus one.";
 }
 
-L1TkIsoEleFilter::~L1TkIsoEleFilter() = default;
+L1TkEmFilter::~L1TkEmFilter() = default;
 
 //
 // member functions
 //
 
-void L1TkIsoEleFilter::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+void L1TkEmFilter::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
   makeHLTFilterDescription(desc);
   desc.add<double>("MinPt", -1.0);
   desc.add<double>("MinEta", -5.0);
   desc.add<double>("MaxEta", 5.0);
   desc.add<int>("MinN", 1);
-  desc.add<edm::InputTag>("inputTag1", edm::InputTag("L1TkElectrons1"));
-  desc.add<edm::InputTag>("inputTag2", edm::InputTag("L1TkElectrons2"));
-  desc.add<edm::ESInputTag>("esScalingTag", edm::ESInputTag("L1TScalingESSource", "L1TkEleScaling"));
+  desc.add<edm::InputTag>("inputTag1", edm::InputTag("L1TkEms1"));
+  desc.add<edm::InputTag>("inputTag2", edm::InputTag("L1TkEms2"));
+  desc.add<edm::ESInputTag>("esScalingTag", edm::ESInputTag("L1TScalingESSource", "L1TkEmScaling"));
   desc.add<std::vector<double> >("EtaBinsForIsolation", {0.0, 1.479});
   desc.add<std::vector<double> >("TrkIsolation",
                                  {
@@ -78,13 +78,13 @@ void L1TkIsoEleFilter::fillDescriptions(edm::ConfigurationDescriptions& descript
   desc.add<bool>("Qual2IsMask", false);
   desc.add<bool>("ApplyQual1", false);
   desc.add<bool>("ApplyQual2", false);
-  descriptions.add("L1TkIsoEleFilter", desc);
+  descriptions.add("L1TkEmFilter", desc);
 }
 
 // ------------ method called to produce the data  ------------
-bool L1TkIsoEleFilter::hltFilter(edm::Event& iEvent,
-                                 const edm::EventSetup& iSetup,
-                                 trigger::TriggerFilterObjectWithRefs& filterproduct) const {
+bool L1TkEmFilter::hltFilter(edm::Event& iEvent,
+                             const edm::EventSetup& iSetup,
+                             trigger::TriggerFilterObjectWithRefs& filterproduct) const {
   using namespace std;
   using namespace edm;
   using namespace reco;
@@ -96,99 +96,95 @@ bool L1TkIsoEleFilter::hltFilter(edm::Event& iEvent,
 
   // The filter object
   if (saveTags()) {
-    filterproduct.addCollectionTag(l1TkEleTag1_);
-    filterproduct.addCollectionTag(l1TkEleTag2_);
+    filterproduct.addCollectionTag(l1TkEmTag1_);
+    filterproduct.addCollectionTag(l1TkEmTag2_);
   }
 
   // Specific filter code
 
   // get hold of products from Event
 
-  /// Barrel colleciton
-  Handle<l1t::TkElectronCollection> tkEles1;
-  iEvent.getByToken(tkEleToken1_, tkEles1);
+  /// Barrel collection
+  Handle<l1t::TkEmCollection> tkEms1;
+  iEvent.getByToken(tkEmToken1_, tkEms1);
 
   /// Endcap collection
-  Handle<l1t::TkElectronCollection> tkEles2;
-  iEvent.getByToken(tkEleToken2_, tkEles2);
+  Handle<l1t::TkEmCollection> tkEms2;
+  iEvent.getByToken(tkEmToken2_, tkEms2);
 
   // get scaling constants
   // do we *need* to get these every event? can't we cache them somewhere?
   edm::ESHandle<L1TObjScalingConstants> scalingConstants_ = iSetup.getHandle(scalingToken_);
 
-  int ntrkEle(0);
+  int ntrkEm(0);
   // Loop over first collection
-  auto atrkEles(tkEles1->begin());
-  auto otrkEles(tkEles1->end());
-  TkEleCollection::const_iterator itkEle;
-  for (itkEle = atrkEles; itkEle != otrkEles; itkEle++) {
-    double offlinePt = this->TkIsoEleOfflineEt(itkEle->pt(), itkEle->eta(), *scalingConstants_);
+  auto atrkEms(tkEms1->begin());
+  auto otrkEms(tkEms1->end());
+  TkEmCollection::const_iterator itkEm;
+  for (itkEm = atrkEms; itkEm != otrkEms; itkEm++) {
+    double offlinePt = this->TkEmOfflineEt(itkEm->pt(), itkEm->eta(), *scalingConstants_);
     bool passQuality(false);
     bool passIsolation(false);
 
     if (applyQual1_) {
       if (qual1IsMask_)
-        passQuality = (itkEle->EGRef()->hwQual() & quality1_);
+        passQuality = (itkEm->EGRef()->hwQual() & quality1_);
       else
-        passQuality = (itkEle->EGRef()->hwQual() == quality1_);
+        passQuality = (itkEm->EGRef()->hwQual() == quality1_);
     } else
       passQuality = true;
 
     // There has to be a better way to do this.
     for (unsigned int etabin = 1; etabin != etaBinsForIsolation_.size(); ++etabin) {
-      if (std::abs(itkEle->eta()) < etaBinsForIsolation_.at(etabin) and
-          std::abs(itkEle->eta()) > etaBinsForIsolation_.at(etabin - 1) and
-          itkEle->trkIsol() < trkIsolation_.at(etabin - 1))
+      if (std::abs(itkEm->eta()) < etaBinsForIsolation_.at(etabin) and
+          std::abs(itkEm->eta()) > etaBinsForIsolation_.at(etabin - 1) and
+          itkEm->trkIsol() < trkIsolation_.at(etabin - 1))
         passIsolation = true;
     }
 
-    if (offlinePt >= min_Pt_ && itkEle->eta() <= max_Eta_ && itkEle->eta() >= min_Eta_ && passQuality &&
-        passIsolation) {
-      ntrkEle++;
-      l1t::TkElectronRef ref1(l1t::TkElectronRef(tkEles1, distance(atrkEles, itkEle)));
-      filterproduct.addObject(trigger::TriggerObjectType::TriggerL1tkEle, ref1);
+    if (offlinePt >= min_Pt_ && itkEm->eta() <= max_Eta_ && itkEm->eta() >= min_Eta_ && passQuality && passIsolation) {
+      ntrkEm++;
+      l1t::TkEmRef ref1(l1t::TkEmRef(tkEms1, distance(atrkEms, itkEm)));
+      filterproduct.addObject(trigger::TriggerObjectType::TriggerL1TkEm, ref1);
     }
   }
 
-  // Loop over second collection. Notice we don't reset ntrkEle
-  atrkEles = tkEles2->begin();
-  otrkEles = tkEles2->end();
-  for (itkEle = atrkEles; itkEle != otrkEles; itkEle++) {
-    double offlinePt = this->TkIsoEleOfflineEt(itkEle->pt(), itkEle->eta(), *scalingConstants_);
+  // Loop over second collection. Notice we don't reset ntrkEm
+  atrkEms = tkEms2->begin();
+  otrkEms = tkEms2->end();
+  for (itkEm = atrkEms; itkEm != otrkEms; itkEm++) {
+    double offlinePt = this->TkEmOfflineEt(itkEm->pt(), itkEm->eta(), *scalingConstants_);
     bool passQuality(false);
     bool passIsolation(false);
 
     if (applyQual2_) {
       if (qual2IsMask_)
-        passQuality = (itkEle->EGRef()->hwQual() & quality2_);
+        passQuality = (itkEm->EGRef()->hwQual() & quality2_);
       else
-        passQuality = (itkEle->EGRef()->hwQual() == quality2_);
+        passQuality = (itkEm->EGRef()->hwQual() == quality2_);
     } else
       passQuality = true;
 
     for (unsigned int etabin = 1; etabin != etaBinsForIsolation_.size(); ++etabin) {
-      if (std::abs(itkEle->eta()) < etaBinsForIsolation_.at(etabin) and
-          std::abs(itkEle->eta()) > etaBinsForIsolation_.at(etabin - 1) and
-          itkEle->trkIsol() < trkIsolation_.at(etabin - 1))
+      if (std::abs(itkEm->eta()) < etaBinsForIsolation_.at(etabin) and
+          std::abs(itkEm->eta()) > etaBinsForIsolation_.at(etabin - 1) and
+          itkEm->trkIsol() < trkIsolation_.at(etabin - 1))
         passIsolation = true;
     }
 
-    if (offlinePt >= min_Pt_ && itkEle->eta() <= max_Eta_ && itkEle->eta() >= min_Eta_ && passQuality &&
-        passIsolation) {
-      ntrkEle++;
-      l1t::TkElectronRef ref2(l1t::TkElectronRef(tkEles2, distance(atrkEles, itkEle)));
-      filterproduct.addObject(trigger::TriggerObjectType::TriggerL1tkEle, ref2);
+    if (offlinePt >= min_Pt_ && itkEm->eta() <= max_Eta_ && itkEm->eta() >= min_Eta_ && passQuality && passIsolation) {
+      ntrkEm++;
+      l1t::TkEmRef ref2(l1t::TkEmRef(tkEms2, distance(atrkEms, itkEm)));
+      filterproduct.addObject(trigger::TriggerObjectType::TriggerL1TkEm, ref2);
     }
   }
 
   // return with final filter decision
-  const bool accept(ntrkEle >= min_N_);
+  const bool accept(ntrkEm >= min_N_);
   return accept;
 }
 
-double L1TkIsoEleFilter::TkIsoEleOfflineEt(double Et,
-                                           double Eta,
-                                           const L1TObjScalingConstants& scalingConstants) const {
+double L1TkEmFilter::TkEmOfflineEt(double Et, double Eta, const L1TObjScalingConstants& scalingConstants) const {
   if (std::abs(Eta) < 1.5)
     return (scalingConstants.m_constants.at(0).m_constant + Et * scalingConstants.m_constants.at(0).m_linear +
             Et * Et * scalingConstants.m_constants.at(0).m_quadratic);

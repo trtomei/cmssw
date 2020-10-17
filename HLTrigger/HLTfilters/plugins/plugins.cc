@@ -41,7 +41,7 @@ using namespace trigger;
 
 #include "L1TkMuonFilter.h"
 #include "L1TkEleFilter.h"
-#include "L1TkIsoEleFilter.h"
+#include "L1TkEmFilter.h"
 #include "L1PFJetFilter.h"
 #include "L1EnergySumFilterT.h"
 
@@ -133,7 +133,7 @@ DEFINE_FWK_MODULE(HLTFiltCand);
 DEFINE_FWK_MODULE(HLTHighLevel);
 DEFINE_FWK_MODULE(L1TkMuonFilter);
 DEFINE_FWK_MODULE(L1TkEleFilter);
-DEFINE_FWK_MODULE(L1TkIsoEleFilter);
+DEFINE_FWK_MODULE(L1TkEmFilter);
 DEFINE_FWK_MODULE(L1PFJetFilter);
 DEFINE_FWK_MODULE(L1EnergySumFilter);
 DEFINE_FWK_MODULE(L1PFEnergySumFilter);

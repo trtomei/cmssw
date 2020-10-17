@@ -42,14 +42,18 @@ private:
   edm::EDGetTokenT<TkEleCollection> tkEleToken2_;  // token identifying product containing L1 TkEles
   edm::ESGetToken<L1TObjScalingConstants, L1TObjScalingRcd> scalingToken_;  // token identifying the L1T scaling constants
 
-  double min_Pt_;    // min pt cut
-  int min_N_;        // min number of candidates above pT cut
-  double min_Eta_;   //min eta cut
-  double max_Eta_;   //max eta cut
-  int quality1_;     // quality for electrons of 1st collection
-  int quality2_;     // quality for electrons of 2nd collection
-  int qual1IsMask_;  // is qual for electrons of 1st collection a mask?
-  int qual2IsMask_;  // is qual for electrons of 2nd collection a mask?
+  double min_Pt_;                            // min pt cut
+  int min_N_;                                // min number of candidates above pT cut
+  double min_Eta_;                           //min eta cut
+  double max_Eta_;                           //max eta cut
+  std::vector<double> etaBinsForIsolation_;  // abs. eta bin edges for isolation. First edge at 0.0 must be explicit!
+  std::vector<double> trkIsolation_;         // values for track isolation in the bins defined above
+  int quality1_;                             // quality for electrons of 1st collection
+  int quality2_;                             // quality for electrons of 2nd collection
+  int qual1IsMask_;                          // is qual for electrons of 1st collection a mask?
+  int qual2IsMask_;                          // is qual for electrons of 2nd collection a mask?
+  bool applyQual1_;                          // should we apply quality 1?
+  bool applyQual2_;                          // should we apply quality 2?
 
   double TkEleOfflineEt(double Et, double Eta, const L1TObjScalingConstants& scalingConstants) const;
 };
