@@ -116,13 +116,11 @@ process.l1tIsoPho7 = cms.EDFilter(
     Qual2IsMask=cms.bool(False),
 )
 
-process.l1tPFJet64 = cms.EDFilter(
-    "L1PFJetFilter",
+process.l1tPFJet64 = cms.EDFilter("L1PFJetFilter",
     MinPt=cms.double(64.0),
 )
 
-process.L1PFHtMht = cms.EDProducer(
-    "HLTHtMhtProducer",
+process.L1PFHtMht = cms.EDProducer("HLTHtMhtProducer",
     jetsLabel=cms.InputTag("ak4PFL1PuppiCorrected"),
     minPtJetHt=cms.double(30),
     maxEtaJetHt=cms.double(2.4),
@@ -134,28 +132,25 @@ process.L1PFHtMht = cms.EDProducer(
 # should probably use the precomputed one.
 
 # We don't have scaling for MHT...
-process.l1tPFMht120 = cms.EDFilter(
-    "L1EnergySumFilter",
+process.l1tPFMht120 = cms.EDFilter("L1EnergySumFilter",
     inputTag=cms.InputTag("L1PFHtMht"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
-    MinPt=cms.double(120.0),
-    TypeOfSum=cms.string("MHT"),
+    typeOfSum=cms.string("MHT"),
+    minPt=cms.double(120.0),
 )
 
-process.l1tPFHt120 = cms.EDFilter(
-    "L1EnergySumFilter",
+process.l1tPFHt120 = cms.EDFilter("L1EnergySumFilter",
     inputTag=cms.InputTag("L1PFHtMht"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
-    MinPt=cms.double(120.0),
-    TypeOfSum=cms.string("HT"),
+    typeOfSum=cms.string("HT"),
+    minPt=cms.double(120.0),
 )
 
-process.l1tPFMet120 = cms.EDFilter(
-    "L1PFEnergySumFilter",
+process.l1tPFMet120 = cms.EDFilter("L1PFEnergySumFilter",
     inputTag=cms.InputTag("l1PFMetPuppi"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PuppiMETScaling"),
-    MinPt=cms.double(120.0),
-    TypeOfSum=cms.string("MET"),
+    typeOfSum=cms.string("MET"),
+    minPt=cms.double(120.0),
 )
 
 process.l1tDoubleMuon7 = cms.EDFilter(

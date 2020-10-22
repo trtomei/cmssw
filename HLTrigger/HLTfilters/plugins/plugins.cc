@@ -42,7 +42,7 @@ using namespace trigger;
 #include "L1TkMuonFilter.h"
 #include "L1TkEleFilter.h"
 #include "L1TkEmFilter.h"
-#include "L1PFJetFilter.h"
+#include "L1JetFilterT.h"
 #include "L1EnergySumFilterT.h"
 
 // filter for HLT candidates
@@ -69,6 +69,9 @@ typedef HLTSinglet<l1extra::L1JetParticle>
 typedef HLTSinglet<l1extra::L1MuonParticle> HLTLevel1Muon;
 
 typedef HLTSinglet<l1t::PFJet> HLTLevel1PFJet;
+
+typedef L1JetFilterT<reco::CaloJet> L1JetFilter;
+typedef L1JetFilterT<l1t::PFJet> L1PFJetFilter;
 
 typedef L1EnergySumFilterT<reco::MET> L1EnergySumFilter;
 typedef L1EnergySumFilterT<reco::PFMET> L1PFEnergySumFilter;
@@ -134,6 +137,7 @@ DEFINE_FWK_MODULE(HLTHighLevel);
 DEFINE_FWK_MODULE(L1TkMuonFilter);
 DEFINE_FWK_MODULE(L1TkEleFilter);
 DEFINE_FWK_MODULE(L1TkEmFilter);
+DEFINE_FWK_MODULE(L1JetFilter);
 DEFINE_FWK_MODULE(L1PFJetFilter);
 DEFINE_FWK_MODULE(L1EnergySumFilter);
 DEFINE_FWK_MODULE(L1PFEnergySumFilter);

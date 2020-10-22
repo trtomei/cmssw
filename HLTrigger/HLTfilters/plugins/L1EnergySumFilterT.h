@@ -11,6 +11,7 @@
 #include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "HLTrigger/HLTcore/interface/HLTFilter.h"
+#include "HLTrigger/HLTcore/interface/defaultModuleLabel.h"
 
 template <typename T>
 class L1EnergySumFilterT : public HLTFilter {
@@ -21,34 +22,34 @@ public:
   bool hltFilter(edm::Event&, edm::EventSetup const&, trigger::TriggerFilterObjectWithRefs& filterproduct) const override;
 
 private:
-  edm::InputTag const l1SumTag_;                     // input tag for L1 Energy Sum product
-  edm::ESInputTag const l1SumScalingTag_;            // input tag for L1 Energy Sum scaling
-  edm::EDGetTokenT<std::vector<T>> const sumToken_;  // token identifying product containing L1 EnergySums
-  edm::ESGetToken<L1TObjScalingConstants, L1TObjScalingRcd> const scalingToken_;  // token identifying the L1T scaling constants
+  edm::InputTag const l1tSumTag_;
+  edm::EDGetTokenT<std::vector<T>> const l1tSumToken_;
+  edm::ESInputTag const l1tSumScalingTag_;
+  edm::ESGetToken<L1TObjScalingConstants, L1TObjScalingRcd> const l1tSumScalingToken_;
 
-  trigger::TriggerObjectType const typeOfSumEnum_;
+  trigger::TriggerObjectType const l1tSumType_;
   double const minPt_;
 
-  trigger::TriggerObjectType typeOfSumEnum(std::string const&) const;
+  trigger::TriggerObjectType typeOfL1TSum(std::string const&) const;
 
-  double EnergySumOfflineEt(double const Et, L1TObjScalingConstants const& scalingConstants) const;
+  double offlineEnergySum(double const Et, L1TObjScalingConstants const& scalingConstants) const;
 };
 
 template <typename T>
 L1EnergySumFilterT<T>::L1EnergySumFilterT(const edm::ParameterSet& iConfig)
   : HLTFilter(iConfig),
-    l1SumTag_(iConfig.getParameter<edm::InputTag>("inputTag")),
-    l1SumScalingTag_(iConfig.getParameter<edm::ESInputTag>("esScalingTag")),
-    sumToken_(consumes<std::vector<T>>(l1SumTag_)),
-    scalingToken_(esConsumes<L1TObjScalingConstants, L1TObjScalingRcd>(l1SumScalingTag_)),
-    typeOfSumEnum_(typeOfSumEnum(iConfig.getParameter<std::string>("TypeOfSum"))),
+    l1tSumTag_(iConfig.getParameter<edm::InputTag>("inputTag")),
+    l1tSumToken_(consumes<std::vector<T>>(l1tSumTag_)),
+    l1tSumScalingTag_(iConfig.getParameter<edm::ESInputTag>("esScalingTag")),
+    l1tSumScalingToken_(esConsumes<L1TObjScalingConstants, L1TObjScalingRcd>(l1tSumScalingTag_)),
+    l1tSumType_(typeOfL1TSum(iConfig.getParameter<std::string>("TypeOfSum"))),
     minPt_(iConfig.getParameter<double>("MinPt")) {}
 
 template <typename T>
 L1EnergySumFilterT<T>::~L1EnergySumFilterT() = default;
 
 template <typename T>
-trigger::TriggerObjectType L1EnergySumFilterT<T>::typeOfSumEnum(std::string const& typeOfSum) const {
+trigger::TriggerObjectType L1EnergySumFilterT<T>::typeOfL1TSum(std::string const& typeOfSum) const {
   trigger::TriggerObjectType sumEnum;
 
   if (typeOfSum == "MET")
@@ -73,7 +74,7 @@ void L1EnergySumFilterT<T>::fillDescriptions(edm::ConfigurationDescriptions& des
   desc.add<edm::InputTag>("inputTag", edm::InputTag("L1PFEnergySums"));
   desc.add<edm::ESInputTag>("esScalingTag", edm::ESInputTag("L1TScalingESSource", "L1PFEnergySumScaling"));
   desc.add<std::string>("TypeOfSum", "HT");
-  desc.add<double>("MinPt", -1.0);
+  desc.add<double>("MinPt", -1.);
   descriptions.add(defaultModuleLabel<L1EnergySumFilterT<T>>(), desc);
 }
 
@@ -85,45 +86,40 @@ bool L1EnergySumFilterT<T>::hltFilter(edm::Event& iEvent, edm::EventSetup const&
 
   // The filter object
   if (saveTags()) {
-    filterproduct.addCollectionTag(l1SumTag_);
+    filterproduct.addCollectionTag(l1tSumTag_);
   }
 
-  // Specific filter code
+  auto const& l1tSums = iEvent.getHandle(l1tSumToken_);
+  auto const& l1tSumScalingConstants = iSetup.getData(l1tSumScalingToken_);
 
-  // get hold of products from Event
-  auto const sums = iEvent.getHandle(sumToken_);
-
-  // get scaling constants
-  // do we *need* to get these every event? can't we cache them somewhere?
-  edm::ESHandle<L1TObjScalingConstants> scalingConstants_ = iSetup.getHandle(scalingToken_);
-
-  // sum
-  int nsum(0);
-  for (auto isum = sums->begin(); isum != sums->end(); isum++) {
+  int nSum(0);
+  for (auto iSum = l1tSums->begin(); iSum != l1tSums->end(); ++iSum) {
     double offlinePt = 0.0;
     // pt or sumEt?
-    if (typeOfSumEnum_ == trigger::TriggerObjectType::TriggerL1PFMET or typeOfSumEnum_ == trigger::TriggerObjectType::TriggerL1PFMHT)
-      offlinePt = this->EnergySumOfflineEt(isum->pt(), *scalingConstants_);
-    else if (typeOfSumEnum_ == trigger::TriggerObjectType::TriggerL1PFETT or typeOfSumEnum_ == trigger::TriggerObjectType::TriggerL1PFHT)
-      offlinePt = this->EnergySumOfflineEt(isum->sumEt(), *scalingConstants_);
+    if (l1tSumType_ == trigger::TriggerObjectType::TriggerL1PFMET or l1tSumType_ == trigger::TriggerObjectType::TriggerL1PFMHT) {
+      offlinePt = offlineEnergySum(iSum->pt(), l1tSumScalingConstants);
+    }
+    else if (l1tSumType_ == trigger::TriggerObjectType::TriggerL1PFETT or l1tSumType_ == trigger::TriggerObjectType::TriggerL1PFHT) {
+      offlinePt = offlineEnergySum(iSum->sumEt(), l1tSumScalingConstants);
+    }
     else {
-      throw cms::Exception("Input") << "Invalid trigger::TriggerObjectType enum: " << typeOfSumEnum_;
+      throw cms::Exception("Input") << "Invalid trigger::TriggerObjectType enum: " << l1tSumType_;
     }
 
     if (offlinePt >= minPt_) {
-      nsum++;
-      edm::Ref<std::vector<T>> ref(sums, distance(sums->begin(), isum));
-      filterproduct.addObject(typeOfSumEnum_, ref);
+      ++nSum;
+      edm::Ref<std::vector<T>> ref(l1tSums, std::distance(l1tSums->begin(), iSum));
+      filterproduct.addObject(l1tSumType_, ref);
     }
   }
 
   // return final filter decision
-  return (nsum > 0);
+  return nSum > 0;
 }
 
 template <typename T>
-double L1EnergySumFilterT<T>::EnergySumOfflineEt(double const Et, L1TObjScalingConstants const& scalingConstants) const {
-  return (scalingConstants.m_constants.at(0).m_constant + Et * scalingConstants.m_constants.at(0).m_linear + Et * Et * scalingConstants.m_constants.at(0).m_quadratic);
+double L1EnergySumFilterT<T>::offlineEnergySum(double const Et, L1TObjScalingConstants const& scalingConstants) const {
+  return scalingConstants.m_constants.at(0).m_constant + Et * scalingConstants.m_constants.at(0).m_linear + Et * Et * scalingConstants.m_constants.at(0).m_quadratic;
 }
 
 #endif // HLTrigger_HLTfilters_L1EnergySumFilterT_h
