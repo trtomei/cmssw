@@ -25,10 +25,10 @@ public:
   bool hltFilter(edm::Event&, const edm::EventSetup&, trigger::TriggerFilterObjectWithRefs& filterproduct) const override;
 
 private:
-  edm::InputTag l1tJetTag_;
-  edm::EDGetTokenT<std::vector<T>> l1tJetToken_;
-  edm::ESInputTag l1tJetScalingTag_;
-  edm::ESGetToken<L1TObjScalingConstants, L1TObjScalingRcd> l1tJetScalingToken_;
+  edm::InputTag const l1tJetTag_;
+  edm::EDGetTokenT<std::vector<T>> const l1tJetToken_;
+  edm::ESInputTag const l1tJetScalingTag_;
+  edm::ESGetToken<L1TObjScalingConstants, L1TObjScalingRcd> const l1tJetScalingToken_;
 
   double const minPt_;
   double const minEta_;
