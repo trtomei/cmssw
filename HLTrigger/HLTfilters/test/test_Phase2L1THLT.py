@@ -135,22 +135,22 @@ process.L1PFHtMht = cms.EDProducer("HLTHtMhtProducer",
 process.l1tPFMht120 = cms.EDFilter("L1EnergySumFilter",
     inputTag=cms.InputTag("L1PFHtMht"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
-    typeOfSum=cms.string("MHT"),
-    minPt=cms.double(120.0),
+    TypeOfSum=cms.string("MHT"),
+    MinPt=cms.double(120.0),
 )
 
 process.l1tPFHt120 = cms.EDFilter("L1EnergySumFilter",
     inputTag=cms.InputTag("L1PFHtMht"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
-    typeOfSum=cms.string("HT"),
-    minPt=cms.double(120.0),
+    TypeOfSum=cms.string("HT"),
+    MinPt=cms.double(120.0),
 )
 
 process.l1tPFMet120 = cms.EDFilter("L1PFEnergySumFilter",
     inputTag=cms.InputTag("l1PFMetPuppi"),
     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PuppiMETScaling"),
-    typeOfSum=cms.string("MET"),
-    minPt=cms.double(120.0),
+    TypeOfSum=cms.string("MET"),
+    MinPt=cms.double(120.0),
 )
 
 process.l1tDoubleMuon7 = cms.EDFilter(

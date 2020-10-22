@@ -3,13 +3,13 @@
 
 #include <vector>
 #include <cmath>
+#include <iterator>
 
 #include "CondFormats/HLTObjects/interface/L1TObjScalingConstants.h"
 #include "CondFormats/DataRecord/interface/L1TObjScalingRcd.h"
 #include "DataFormats/Common/interface/Ref.h"
 #include "DataFormats/HLTReco/interface/TriggerFilterObjectWithRefs.h"
 #include "DataFormats/HLTReco/interface/TriggerTypeDefs.h"
-#include "DataFormats/JetReco/interface/CaloJet.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/ParameterSet/interface/ConfigurationDescriptions.h"

@@ -2,6 +2,7 @@
 #define HLTrigger_HLTfilters_L1EnergySumFilterT_h
 
 #include <vector>
+#include <iterator>
 
 #include "CondFormats/HLTObjects/interface/L1TObjScalingConstants.h"
 #include "CondFormats/DataRecord/interface/L1TObjScalingRcd.h"
