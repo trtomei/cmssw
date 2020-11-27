@@ -34,17 +34,22 @@ else:
 	process.load('DQM.Integration.config.FrontierCondition_GT_cfi')
 if useFileInput:
 	process.load("DQM.Integration.config.fileinputsource_cfi")
+	from DQM.Integration.config.fileinputsource_cfi import options
 else:
 	process.load('DQM.Integration.config.inputsource_cfi')
+	from DQM.Integration.config.inputsource_cfi import options
 process.load('DQM.Integration.config.environment_cfi')
 
 #-------------------------------------
 #	Central DQM Customization
 #-------------------------------------
 process.source.streamLabel = cms.untracked.string("streamDQMCalibration")
-process.source.SelectEvents = cms.untracked.vstring("*HcalCalibration*")
+#process.source.SelectEvents = cms.untracked.vstring("*HcalCalibration*")
 process.dqmEnv.subSystemFolder = subsystem
 process.dqmSaver.tag = subsystem
+process.dqmSaver.runNumber = options.runNumber
+process.dqmSaverPB.tag = subsystem
+process.dqmSaverPB.runNumber = options.runNumber
 process = customise(process)
 if not useFileInput:
 	process.source.minEventsPerLumi=100
@@ -233,7 +238,8 @@ process.p = cms.Path(
 					*process.tasksSequence
 					*process.harvestingSequence
                     *process.dqmEnv
-                    *process.dqmSaver)
+                    *process.dqmSaver
+		    *process.dqmSaverPB)
 
 #-------------------------------------
 #	Scheduling
