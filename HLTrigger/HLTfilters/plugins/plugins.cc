@@ -39,6 +39,8 @@ using namespace trigger;
 #include "HLTSinglet.h"
 #include "HLTSinglet.cc"
 
+#include "L1TkEleFilter.h"
+
 // filter for HLT candidates
 typedef HLTSinglet<RecoEcalCandidate> HLT1Photon;
 typedef HLTSinglet<Electron> HLT1Electron;
@@ -156,6 +158,9 @@ DEFINE_FWK_MODULE(HLTLevel1EG);
 DEFINE_FWK_MODULE(HLTLevel1MET);
 DEFINE_FWK_MODULE(HLTLevel1Jet);
 DEFINE_FWK_MODULE(HLTLevel1Muon);
+
+// Phase-2
+DEFINE_FWK_MODULE(L1TkEleFilter);
 
 DEFINE_FWK_MODULE(HLTGlobalSumsPFMET);
 DEFINE_FWK_MODULE(HLTGlobalSumsCaloMET);
