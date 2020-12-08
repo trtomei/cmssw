@@ -9,7 +9,7 @@
  *  This has support for *two* collections, since electrons can come
  *  either from crystal calo or HGCAL
  *
- *  \author Simone gennai
+ *  \author Simone Gennai
  *  \author Thiago Tomei
  */
 

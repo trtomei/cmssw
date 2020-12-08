@@ -4,9 +4,9 @@
  *
  *
  *  \author Martin Grunewald
- *  \author Simone gennai
+ *  \author Simone Gennai
  *  \author Thiago Tomei
-*
+ *
  */
 
 #include "L1TkEleFilter.h"
