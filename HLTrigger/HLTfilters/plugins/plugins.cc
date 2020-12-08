@@ -40,6 +40,7 @@ using namespace trigger;
 #include "HLTSinglet.cc"
 
 #include "L1TkEleFilter.h"
+#include "L1TkEmFilter.h"
 #include "L1TkMuonFilter.h"
 
 // filter for HLT candidates
@@ -162,6 +163,7 @@ DEFINE_FWK_MODULE(HLTLevel1Muon);
 
 // Phase-2
 DEFINE_FWK_MODULE(L1TkEleFilter);
+DEFINE_FWK_MODULE(L1TkEmFilter);
 DEFINE_FWK_MODULE(L1TkMuonFilter);
 
 DEFINE_FWK_MODULE(HLTGlobalSumsPFMET);

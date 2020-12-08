@@ -37,6 +37,10 @@ process.l1tIsoEle7 = cms.EDFilter(
     MaxEta=cms.double(2.4),
     inputTag1=cms.InputTag("L1TkElectronsEllipticMatchCrystal", "EG"),
     inputTag2=cms.InputTag("L1TkElectronsEllipticMatchHGC", "EG"),
+    Scalings=cms.PSet(
+        barrel=cms.vdouble(0.434262, 1.20586, 0.0),
+        endcap=cms.vdouble(0.266186, 1.25976, 0.0),
+    ),
     EtaBinsForIsolation=cms.vdouble(0.0, 1.479, 9999.9),
     TrkIsolation=cms.vdouble(0.12, 0.2),
     ApplyQual1=cms.bool(False),
@@ -47,23 +51,39 @@ process.l1tIsoEle7 = cms.EDFilter(
     Qual2IsMask=cms.bool(False),
 )
 
-# process.l1tIsoPho7 = cms.EDFilter(
-#     "L1TkEmFilter",
-#     MinPt=cms.double(7.0),
-#     MinEta=cms.double(-2.4),
-#     MaxEta=cms.double(2.4),
-#     inputTag1=cms.InputTag("L1TkPhotonsCrystal", "EG"),
-#     inputTag2=cms.InputTag("L1TkPhotonsHGC", "EG"),
-#     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1TkIsoPhoScaling"),
-#     EtaBinsForIsolation=cms.vdouble(0.0, 1.479, 9999.9),
-#     TrkIsolation=cms.vdouble(0.28, 0.35),
-#     ApplyQual1=cms.bool(False),
-#     ApplyQual2=cms.bool(True),
-#     Quality1=cms.int32(2),  # 0x2 "second bit"
-#     Quality2=cms.int32(5),
-#     Qual1IsMask=cms.bool(True),
-#     Qual2IsMask=cms.bool(False),
-# )
+process.l1tIsoPho7 = cms.EDFilter(
+    "L1TkEmFilter",
+    MinPt=cms.double(7.0),
+    MinEta=cms.double(-2.4),
+    MaxEta=cms.double(2.4),
+    inputTag1=cms.InputTag("L1TkPhotonsCrystal", "EG"),
+    inputTag2=cms.InputTag("L1TkPhotonsHGC", "EG"),
+    Scalings=cms.PSet(
+        barrel=cms.vdouble(2.54255, 1.08749, 0.0),
+        endcap=cms.vdouble(2.11186, 1.15524, 0.0),
+    ),    
+    EtaBinsForIsolation=cms.vdouble(0.0, 1.479, 9999.9),
+    TrkIsolation=cms.vdouble(0.28, 0.35),
+    ApplyQual1=cms.bool(False),
+    ApplyQual2=cms.bool(True),
+    Quality1=cms.int32(2),  # 0x2 "second bit"
+    Quality2=cms.int32(5),
+    Qual1IsMask=cms.bool(True),
+    Qual2IsMask=cms.bool(False),
+)
+
+process.l1tMuon7 = cms.EDFilter(
+    "L1TkMuonFilter",
+    MinPt=cms.double(7.0),
+    MinEta=cms.double(-2.4),
+    MaxEta=cms.double(2.4),
+    inputTag=cms.InputTag("L1TkMuons"),
+    Scalings=cms.PSet(
+        barrel=cms.vdouble(0.802461, 1.04193, 0.0),
+        overlap=cms.vdouble(0.921315, 1.03611, 0.0),
+        endcap=cms.vdouble(0.828802, 1.03447, 0.0),
+    ),
+  )
 
 # process.l1tPFJet64 = cms.EDFilter("L1PFJetFilter",
 #     MinPt=cms.double(64.0),
@@ -137,6 +157,9 @@ process.l1tIsoEle7 = cms.EDFilter(
 
 
 process.HLT_SingleEle7 = cms.Path(process.l1tEle7)
+process.HLT_SingleIsoEle7 = cms.Path(process.l1tIsoEle7)
+process.HLT_SingleIsoPhoton7 = cms.Path(process.l1tIsoPho7)
+process.HLT_SingleMu7 = cms.Path(process.l1tMuon7)
 
 process.source = cms.Source(
     "PoolSource",
