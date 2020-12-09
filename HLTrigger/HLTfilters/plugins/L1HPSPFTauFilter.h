@@ -31,12 +31,14 @@ public:
                  trigger::TriggerFilterObjectWithRefs& filterproduct) const override;
 
 private:
-  edm::InputTag l1HPSPFTauTag_;                              //input tag for L1 HPSPFTau product
+  edm::InputTag l1HPSPFTauTag_;                              // input tag for L1 HPSPFTau product
   edm::EDGetTokenT<l1t::HPSPFTauCollection> hpspfTauToken_;  // token identifying product containing L1 HPSPFTaus
   double min_Pt_;                                            // min pt cut
   int min_N_;                                                // min number of candidates above pT cut
-  double min_Eta_;                                           //min eta cut
-  double max_Eta_;                                           //max eta cut
+  double min_Eta_;                                           // min eta cut
+  double max_Eta_;                                           // max eta cut
+  double max_RelChargedIso_;                                 // max relative charged isolation
+  double min_LeadTrackPt_;                                   // min leading track pT
   edm::ParameterSet scalings_;           // all scalings. An indirection level allows extra flexibility
   std::vector<double> barrelScalings_;   // barrel scalings
   std::vector<double> overlapScalings_;  // overlap scalings

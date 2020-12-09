@@ -34,6 +34,8 @@ L1HPSPFTauFilter::L1HPSPFTauFilter(const edm::ParameterSet& iConfig)
   min_N_ = iConfig.getParameter<int>("MinN");
   min_Eta_ = iConfig.getParameter<double>("MinEta");
   max_Eta_ = iConfig.getParameter<double>("MaxEta");
+  max_RelChargedIso_ = iConfig.getParameter<double>("MaxRelChargedIso");
+  min_LeadTrackPt_ = iConfig.getParameter<double>("MinLeadTrackPt");
   scalings_ = iConfig.getParameter<edm::ParameterSet>("Scalings");
   barrelScalings_ = scalings_.getParameter<std::vector<double> >("barrel");
   overlapScalings_ = scalings_.getParameter<std::vector<double> >("overlap");
@@ -52,6 +54,8 @@ void L1HPSPFTauFilter::fillDescriptions(edm::ConfigurationDescriptions& descript
   desc.add<double>("MinPt", -1.0);
   desc.add<double>("MinEta", -5.0);
   desc.add<double>("MaxEta", 5.0);
+  desc.add<double>("MaxRelChargedIso", 1.0E9);
+  desc.add<double>("MinLeadTrackPt", -1.0);
   desc.add<int>("MinN", 1);
   desc.add<edm::InputTag>("inputTag", edm::InputTag("L1HPSPFTaus"));
 
@@ -95,8 +99,9 @@ bool L1HPSPFTauFilter::hltFilter(edm::Event& iEvent,
   l1t::HPSPFTauCollection::const_iterator iHPSPFTau;
   for (iHPSPFTau = apftaus; iHPSPFTau != opftaus; iHPSPFTau++) {
     double offlinePt = this->HPSPFTauOfflineEt(iHPSPFTau->pt(), iHPSPFTau->eta());
-    // More selections should be in the IF below...
-    if (offlinePt >= min_Pt_ && iHPSPFTau->eta() <= max_Eta_ && iHPSPFTau->eta() >= min_Eta_) {
+    if (offlinePt >= min_Pt_ && iHPSPFTau->eta() <= max_Eta_ && iHPSPFTau->eta() >= min_Eta_ &&
+        (iHPSPFTau->sumChargedIso() / iHPSPFTau->pt()) < max_RelChargedIso_ &&
+        (iHPSPFTau->leadChargedPFCand()->pfTrack()->pt()) > min_LeadTrackPt_) {
       npftau++;
       l1t::HPSPFTauRef ref(l1t::HPSPFTauRef(HPSPFTaus, distance(apftaus, iHPSPFTau)));
       filterproduct.addObject(trigger::TriggerObjectType::TriggerL1PFTau, ref);
