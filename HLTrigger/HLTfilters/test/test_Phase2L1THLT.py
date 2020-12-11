@@ -85,15 +85,18 @@ process.l1tMuon7 = cms.EDFilter(
     ),
   )
 
-# process.l1tPFJet64 = cms.EDFilter("L1PFJetFilter",
-#     MinPt=cms.double(64.0),
-# )
+process.l1tPFJet64 = cms.EDFilter("L1PFJetFilter",
+    inputTag = cms.InputTag("ak4PFL1PuppiCorrected"),
+     MinPt=cms.double(64.0),
+     MinEta = cms.double(-2.4),                                   
+     MaxEta = cms.double(2.4),                                   
+)
 
-# process.L1PFHtMht = cms.EDProducer("HLTHtMhtProducer",
-#     jetsLabel=cms.InputTag("ak4PFL1PuppiCorrected"),
-#     minPtJetHt=cms.double(30),
-#     maxEtaJetHt=cms.double(2.4),
-# )
+process.L1PFHtMht = cms.EDProducer("HLTHtMhtProducer",
+     jetsLabel=cms.InputTag("ak4PFL1PuppiCorrected"),
+     minPtJetHt=cms.double(30),
+     maxEtaJetHt=cms.double(2.4),
+)
 
 # ### Notice that there is no MHT seed in the Phase-II Level-1 Menu...
 # # Possible choices for TypeOfSum are: MET, MHT, ETT, HT
@@ -101,26 +104,30 @@ process.l1tMuon7 = cms.EDFilter(
 # # should probably use the precomputed one.
 
 # # We don't have scaling for MHT...
-# process.l1tPFMht120 = cms.EDFilter("L1EnergySumFilter",
-#     inputTag=cms.InputTag("L1PFHtMht"),
-#     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
-#     TypeOfSum=cms.string("MHT"),
-#     MinPt=cms.double(120.0),
-# )
+process.l1tPFMht40 = cms.EDFilter("L1EnergySumFilter",
+     inputTag=cms.InputTag("L1PFHtMht"),
+     Scalings = cms.PSet(
+         theScalings = cms.vdouble(0,1,0),
+     ),
+     TypeOfSum=cms.string("MHT"),
+     MinPt=cms.double(40.0),
+)
 
-# process.l1tPFHt120 = cms.EDFilter("L1EnergySumFilter",
-#     inputTag=cms.InputTag("L1PFHtMht"),
-#     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PFHTScaling"),
-#     TypeOfSum=cms.string("HT"),
-#     MinPt=cms.double(120.0),
-# )
+process.l1tPFHt90 = cms.EDFilter("L1EnergySumFilter",
+     inputTag=cms.InputTag("L1PFHtMht"),
+     Scalings = cms.PSet(
+         #theScalings = cms.vdouble(-7.12716,1.03067,0), # PFPhase1HTOfflineEtCut
+         theScalings = cms.vdouble(50.0182,1.0961,0),   # PFPhase1HT090OfflineEtCut
+     ),
+     TypeOfSum=cms.string("MHT"),
+     MinPt=cms.double(90.0),
+)
 
-# process.l1tPFMet120 = cms.EDFilter("L1PFEnergySumFilter",
-#     inputTag=cms.InputTag("l1PFMetPuppi"),
-#     esScalingTag=cms.ESInputTag("L1TScalingESSource", "L1PuppiMETScaling"),
-#     TypeOfSum=cms.string("MET"),
-#     MinPt=cms.double(120.0),
-# )
+process.l1tPFMet40 = cms.EDFilter("L1PFEnergySumFilter",
+    inputTag=cms.InputTag("l1PFMetPuppi"),
+    TypeOfSum=cms.string("MET"),
+    MinPt=cms.double(40.0),
+)
 
 # process.l1tDoubleMuon7 = cms.EDFilter(
 #     "L1TkMuonFilter",
@@ -160,6 +167,10 @@ process.HLT_SingleEle7 = cms.Path(process.l1tEle7)
 process.HLT_SingleIsoEle7 = cms.Path(process.l1tIsoEle7)
 process.HLT_SingleIsoPhoton7 = cms.Path(process.l1tIsoPho7)
 process.HLT_SingleMu7 = cms.Path(process.l1tMuon7)
+process.HLT_SingleJet64 = cms.Path(process.l1tPFJet64)
+process.HLT_MHT40 = cms.Path(process.L1PFHtMht + process.l1tPFMht40)
+process.HLT_HT90 = cms.Path(process.L1PFHtMht + process.l1tPFHt90)
+process.HLT_MET40 = cms.Path(process.l1tPFMet40)
 
 process.source = cms.Source(
     "PoolSource",
