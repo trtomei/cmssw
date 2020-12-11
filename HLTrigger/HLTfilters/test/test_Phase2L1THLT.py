@@ -61,7 +61,7 @@ process.l1tIsoPho7 = cms.EDFilter(
     Scalings=cms.PSet(
         barrel=cms.vdouble(2.54255, 1.08749, 0.0),
         endcap=cms.vdouble(2.11186, 1.15524, 0.0),
-    ),    
+    ),
     EtaBinsForIsolation=cms.vdouble(0.0, 1.479, 9999.9),
     TrkIsolation=cms.vdouble(0.28, 0.35),
     ApplyQual1=cms.bool(False),
@@ -83,19 +83,59 @@ process.l1tMuon7 = cms.EDFilter(
         overlap=cms.vdouble(0.921315, 1.03611, 0.0),
         endcap=cms.vdouble(0.828802, 1.03447, 0.0),
     ),
-  )
-
-process.l1tPFJet64 = cms.EDFilter("L1PFJetFilter",
-    inputTag = cms.InputTag("ak4PFL1PuppiCorrected"),
-     MinPt=cms.double(64.0),
-     MinEta = cms.double(-2.4),                                   
-     MaxEta = cms.double(2.4),                                   
 )
 
-process.L1PFHtMht = cms.EDProducer("HLTHtMhtProducer",
-     jetsLabel=cms.InputTag("ak4PFL1PuppiCorrected"),
-     minPtJetHt=cms.double(30),
-     maxEtaJetHt=cms.double(2.4),
+process.l1tDoubleMuon7 = cms.EDFilter(
+    "L1TkMuonFilter",
+    MinN=cms.int32(2),
+    MinPt=cms.double(7.0),
+    MinEta=cms.double(-2.4),
+    MaxEta=cms.double(2.4),
+    inputTag=cms.InputTag("L1TkMuons"),
+    Scalings=cms.PSet(
+        barrel=cms.vdouble(0.802461, 1.04193, 0.0),
+        overlap=cms.vdouble(0.921315, 1.03611, 0.0),
+        endcap=cms.vdouble(0.828802, 1.03447, 0.0),
+    ),
+)
+
+process.l1tDoubleMuon7DZ0p33 = cms.EDFilter(
+    "HLT2L1TkMuonL1TkMuonDZ",
+    originTag1=cms.VInputTag(
+        "L1TkMuons",
+    ),
+    originTag2=cms.VInputTag(
+        "L1TkMuons",
+    ),
+    inputTag1=cms.InputTag("l1tDoubleMuon7"),
+    inputTag2=cms.InputTag("l1tDoubleMuon7"),
+    triggerType1=cms.int32(-114),  # L1TkMuon
+    triggerType2=cms.int32(-114),  # L1TkMuon
+    MinDR=cms.double(-1),
+    MaxDZ=cms.double(0.33),
+    MinPixHitsForDZ=cms.int32(0),  # Immaterial
+    checkSC=cms.bool(False),  # Immaterial
+    MinN=cms.int32(1),
+)
+
+process.l1tPFJet64 = cms.EDFilter(
+    "L1PFJetFilter",
+    inputTag=cms.InputTag("ak4PFL1PuppiCorrected"),
+    Scalings=cms.PSet(
+        barrel=cms.vdouble(11.1254, 1.40627, 0),
+        overlap=cms.vdouble(24.8375, 1.4152, 0),
+        endcap=cms.vdouble(42.4039, 1.33052, 0),
+    ),
+    MinPt=cms.double(64.0),
+    MinEta=cms.double(-2.4),
+    MaxEta=cms.double(2.4),
+)
+
+process.L1PFHtMht = cms.EDProducer(
+    "HLTHtMhtProducer",
+    jetsLabel=cms.InputTag("ak4PFL1PuppiCorrected"),
+    minPtJetHt=cms.double(30),
+    maxEtaJetHt=cms.double(2.4),
 )
 
 # ### Notice that there is no MHT seed in the Phase-II Level-1 Menu...
@@ -104,73 +144,50 @@ process.L1PFHtMht = cms.EDProducer("HLTHtMhtProducer",
 # # should probably use the precomputed one.
 
 # # We don't have scaling for MHT...
-process.l1tPFMht40 = cms.EDFilter("L1EnergySumFilter",
-     inputTag=cms.InputTag("L1PFHtMht"),
-     Scalings = cms.PSet(
-         theScalings = cms.vdouble(0,1,0),
-     ),
-     TypeOfSum=cms.string("MHT"),
-     MinPt=cms.double(40.0),
-)
-
-process.l1tPFHt90 = cms.EDFilter("L1EnergySumFilter",
-     inputTag=cms.InputTag("L1PFHtMht"),
-     Scalings = cms.PSet(
-         #theScalings = cms.vdouble(-7.12716,1.03067,0), # PFPhase1HTOfflineEtCut
-         theScalings = cms.vdouble(50.0182,1.0961,0),   # PFPhase1HT090OfflineEtCut
-     ),
-     TypeOfSum=cms.string("MHT"),
-     MinPt=cms.double(90.0),
-)
-
-process.l1tPFMet40 = cms.EDFilter("L1PFEnergySumFilter",
-    inputTag=cms.InputTag("l1PFMetPuppi"),
-    TypeOfSum=cms.string("MET"),
+process.l1tPFMht40 = cms.EDFilter(
+    "L1EnergySumFilter",
+    inputTag=cms.InputTag("L1PFHtMht"),
+    Scalings=cms.PSet(
+        theScalings=cms.vdouble(0, 1, 0),
+    ),
+    TypeOfSum=cms.string("MHT"),
     MinPt=cms.double(40.0),
 )
 
-# process.l1tDoubleMuon7 = cms.EDFilter(
-#     "L1TkMuonFilter",
-#     MinPt=cms.double(7.0),
-#     MinN=cms.int32(2),
-#     MinEta=cms.double(-2.4),
-#     MaxEta=cms.double(2.4),
-# )
+process.l1tPFHt90 = cms.EDFilter(
+    "L1EnergySumFilter",
+    inputTag=cms.InputTag("L1PFHtMht"),
+    Scalings=cms.PSet(
+        # theScalings = cms.vdouble(-7.12716,1.03067,0), # PFPhase1HTOfflineEtCut
+        theScalings=cms.vdouble(50.0182, 1.0961, 0),  # PFPhase1HT090OfflineEtCut
+    ),
+    TypeOfSum=cms.string("MHT"),
+    MinPt=cms.double(90.0),
+)
 
-# process.l1tSingleMuon15 = cms.EDFilter(
-#     "L1TkMuonFilter",
-#     MinPt=cms.double(15.0),
-#     MinN=cms.int32(2),
-#     MinEta=cms.double(-2.4),
-#     MaxEta=cms.double(2.4),
-# )
-
-# # Not working yet
-# process.l1tDoubleMuonPt15PtDZ1p0 = cms.EDFilter(
-#     "L1T2TkMuonTkMuonDZ",
-#     saveTags=cms.bool(True),
-#     originTag1=cms.VInputTag("L1TkMuons"),
-#     originTag2=cms.VInputTag("L1TkMuons"),
-#     MinPixHitsForDZ=cms.int32(0),
-#     MinN=cms.int32(1),
-#     triggerType1=cms.int32(-114),
-#     triggerType2=cms.int32(-114),
-#     MinDR=cms.double(0.001),
-#     MaxDZ=cms.double(9999.0),
-#     inputTag1=cms.InputTag("l1tDoubleMuon7"),
-#     checkSC=cms.bool(False),
-#     inputTag2=cms.InputTag("l1tSingleMuon15"),
-# )
-
+process.l1tPFMet90 = cms.EDFilter(
+    "L1PFEnergySumFilter",
+    inputTag=cms.InputTag("l1PFMetPuppi"),
+    Scalings=cms.PSet(
+        # theScalings = cms.vdouble(-7.24159,1.20973,0), # PuppiMETOfflineEtCut
+        theScalings=cms.vdouble(54.2859, 1.39739, 0),  # PuppiMET090OfflineEtCut
+        # theScalings = cms.vdouble(0,0,0),
+    ),
+    TypeOfSum=cms.string("MET"),
+    MinPt=cms.double(90.0),
+)
 
 process.HLT_SingleEle7 = cms.Path(process.l1tEle7)
 process.HLT_SingleIsoEle7 = cms.Path(process.l1tIsoEle7)
 process.HLT_SingleIsoPhoton7 = cms.Path(process.l1tIsoPho7)
 process.HLT_SingleMu7 = cms.Path(process.l1tMuon7)
+process.HLT_DoubleMu7_DZ0p33 = cms.Path(
+    process.l1tDoubleMuon7 + process.l1tDoubleMuon7DZ0p33
+)
 process.HLT_SingleJet64 = cms.Path(process.l1tPFJet64)
 process.HLT_MHT40 = cms.Path(process.L1PFHtMht + process.l1tPFMht40)
 process.HLT_HT90 = cms.Path(process.L1PFHtMht + process.l1tPFHt90)
-process.HLT_MET40 = cms.Path(process.l1tPFMet40)
+process.HLT_MET90 = cms.Path(process.l1tPFMet90)
 
 process.source = cms.Source(
     "PoolSource",
