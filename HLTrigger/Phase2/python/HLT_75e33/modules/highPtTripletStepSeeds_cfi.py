@@ -11,9 +11,7 @@ highPtTripletStepSeeds = cms.EDProducer("SeedCreatorFromRegionConsecutiveHitsEDP
     forceKinematicWithRegionDirection = cms.bool(False),
     magneticField = cms.string(''),
     mightGet = cms.untracked.vstring(
-        'RegionsSeedingHitSets_highPtTripletStepHitTriplets__RECO', 
-        'RegionsSeedingHitSets_highPtTripletStepHitTriplets__RECO2', 
-        'RegionsSeedingHitSets_highPtTripletStepHitTriplets__RECO2'
+        'RegionsSeedingHitSets_highPtTripletStepHitTriplets__HLTX'
     ),
     propagator = cms.string('PropagatorWithMaterial'),
     seedingHitSets = cms.InputTag("highPtTripletStepHitTriplets")
