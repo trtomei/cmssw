@@ -24226,6 +24226,21 @@ process.hltEle5WPTightPixelMatchUnseededFilter = cms.EDFilter("HLTElectronPixelM
 )
 
 
+process.hltL1DoubleNNTau52 = cms.EDFilter("L1TPFTauFilter",
+    MaxEta = cms.double(2.172),
+    MinEta = cms.double(-2.172),
+    MinN = cms.int32(2),
+    MinPt = cms.double(52.0),
+    PassLooseNN = cms.int32(0),
+    Scalings = cms.PSet(
+        barrel = cms.vdouble(-9.54135, 1.73403, 0),
+        endcap = cms.vdouble(-36.157, 3.83749, 0)
+    ),
+    inputTag = cms.InputTag("l1NNTauProducerPuppi","L1PFTausNN","L1TSkimming"),
+    saveTags = cms.bool(True)
+)
+
+
 process.hltL1SingleMuFiltered5 = cms.EDFilter("L1TTkMuonFilter",
     MaxEta = cms.double(2.4),
     MinEta = cms.double(-2.4),
@@ -24237,6 +24252,21 @@ process.hltL1SingleMuFiltered5 = cms.EDFilter("L1TTkMuonFilter",
         overlap = cms.vdouble(0.920897, 1.03712, 0.0)
     ),
     inputTag = cms.InputTag("L1TkMuons","","HLTX"),
+    saveTags = cms.bool(True)
+)
+
+
+process.hltL1SingleNNTau150 = cms.EDFilter("L1TPFTauFilter",
+    MaxEta = cms.double(2.172),
+    MinEta = cms.double(-2.172),
+    MinN = cms.int32(1),
+    MinPt = cms.double(150.0),
+    PassLooseNN = cms.int32(0),
+    Scalings = cms.PSet(
+        barrel = cms.vdouble(-9.54135, 1.73403, 0),
+        endcap = cms.vdouble(-36.157, 3.83749, 0)
+    ),
+    inputTag = cms.InputTag("l1NNTauProducerPuppi","L1PFTausNN","L1TSkimming"),
     saveTags = cms.bool(True)
 )
 
@@ -35686,7 +35716,13 @@ process.L1_TripleTkMuon_5_3_3 = cms.Path(process.HLTBeginSequence+process.hltL1T
 process.L1simulation_step = cms.Path(cms.Task(process.simBscDigis, process.simCastorTechTrigDigis, process.simCscTriggerPrimitiveDigis, process.simCsctfDigis, process.simCsctfTrackDigis, process.simDtTriggerPrimitiveDigis, process.simDttfDigis, process.simGctDigis, process.simGmtDigis, process.simGtDigis, process.simHcalTechTrigDigis, process.simRctDigis, process.simRpcTechTrigDigis, process.simRpcTriggerDigis))
 
 
+process.L1T_DoubleNNTau52 = cms.Path(process.HLTL1Sequence+process.hltL1DoubleNNTau52)
+
+
 process.L1T_DoublePFPuppiJets112_2p4_DEta1p6 = cms.Path(process.HLTBeginSequence+process.l1tDoublePFPuppiJet112offMaxEta2p4+process.l1tDoublePFPuppiJets112offMaxDeta1p6+process.HLTEndSequence)
+
+
+process.L1T_DoubleTkMuon_15_7 = cms.Path(process.HLTL1Sequence+process.hltL1TkDoubleMuFiltered7+process.hltL1TkSingleMuFiltered15+process.hltDoubleMuon7DZ1p0)
 
 
 process.L1T_PFHT400PT30_QuadPFPuppiJet_70_55_40_40_2p4 = cms.Path(process.HLTBeginSequence+process.l1tPFPuppiHT+process.l1tPFPuppiHT400offMaxEta2p4+process.l1t1PFPuppiJet70offMaxEta2p4+process.l1t2PFPuppiJet55offMaxEta2p4+process.l1t4PFPuppiJet40offMaxEta2p4+process.l1t4PFPuppiJet25OnlineMaxEta2p4+process.HLTEndSequence)
@@ -35698,7 +35734,13 @@ process.L1T_PFPuppiHT450off = cms.Path(process.HLTBeginSequence+process.l1tPFPup
 process.L1T_PFPuppiMET220off = cms.Path(process.HLTBeginSequence+process.l1tPFPuppiMET220off+process.HLTEndSequence)
 
 
+process.L1T_SingleNNTau150 = cms.Path(process.HLTL1Sequence+process.hltL1SingleNNTau150)
+
+
 process.L1T_SinglePFPuppiJet230off = cms.Path(process.HLTBeginSequence+process.l1tSinglePFPuppiJet230off+process.HLTEndSequence)
+
+
+process.L1T_SingleTkMuon_22 = cms.Path(process.HLTL1Sequence+process.hltL1TkSingleMuFiltered22)
 
 
 process.L1T_TkEle25TkEle12 = cms.Path(process.HLTBeginSequence+process.L1TTkEle25TkEle12Sequence+process.HLTEndSequence)
@@ -35737,5 +35779,5 @@ process.MC_BTV = cms.Path(process.HLTParticleFlowSequence+process.HLTAK4PFPuppiJ
 process.runTheL1P2_step = cms.Path(cms.Task(process.L1TkMuons, process.L1TkPrimaryVertex, process.simEmtfDigis, process.simKBmtfDigis, process.simKBmtfStubs, process.simOmtfDigis, process.simTwinMuxDigis))
 
 
-process.schedule = cms.Schedule(*[ process.L1simulation_step, process.l1tReconstructionPath, process.L1T_SinglePFPuppiJet230off, process.L1T_PFPuppiHT450off, process.L1T_PFPuppiMET220off, process.HLT_AK4PFPuppiJet520, process.HLT_PFPuppiHT1070, process.HLT_PFPuppiMETTypeOne140_PFPuppiMHT140, process.L1T_PFHT400PT30_QuadPFPuppiJet_70_55_40_40_2p4, process.L1T_DoublePFPuppiJets112_2p4_DEta1p6, process.HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepCSV_2p4, process.HLT_PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepCSV_2p4, process.HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepCSV_2p4, process.HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4, process.HLT_PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepFlavour_2p4, process.HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4, process.L1_SingleTkMuon_22, process.L1_DoubleTkMuon_17_8, process.L1_TripleTkMuon_5_3_3, process.HLT_Mu50_FromL1TkMuon, process.HLT_IsoMu24_FromL1TkMuon, process.HLT_Mu37_Mu27_FromL1TkMuon, process.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_FromL1TkMuon, process.HLT_TriMu_10_5_5_DZ_FromL1TkMuon, process.HLT_Photon100_Open_Unseeded, process.HLT_Photon100EB_TightID_TightIso_Open_Unseeded, process.HLT_Ele32_WPTight_Unseeded, process.HLT_Ele26_WP70_Unseeded, process.HLT_Photon108EB_TightID_TightIso_Unseeded, process.HLT_Photon187_Unseeded, process.HLT_DoubleEle25_CaloIdL_PMS2_Unseeded, process.HLT_Diphoton30_23_IsoCaloId_Unseeded, process.HLT_Ele32_WPTight_L1Seeded, process.HLT_Ele26_WP70_L1Seeded, process.HLT_Photon108EB_TightID_TightIso_L1Seeded, process.HLT_Photon187_L1Seeded, process.HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded, process.HLT_Diphoton30_23_IsoCaloId_L1Seeded, process.HLT_DoubleEle23_12_Iso_L1Seeded, process.L1T_TkIsoEle22TkEm12, process.L1T_TkEle25TkEle12, process.L1T_TkEle36, process.L1T_TkEm37TkEm24, process.L1T_TkEm51, process.L1T_TkIsoEle28, process.L1T_TkIsoEm22TkIsoEm12, process.L1T_TkIsoEm36, process.MC_JME, process.MC_BTV, process.MC_Ele5_Open_Unseeded, process.MC_Ele5_WP70_Open_Unseeded, process.MC_Ele5_Open_L1Seeded, process.MC_Ele5_WP70_Open_L1Seeded ])
+process.schedule = cms.Schedule(*[ process.L1simulation_step, process.l1tReconstructionPath, process.L1T_SinglePFPuppiJet230off, process.L1T_PFPuppiHT450off, process.L1T_PFPuppiMET220off, process.HLT_AK4PFPuppiJet520, process.HLT_PFPuppiHT1070, process.HLT_PFPuppiMETTypeOne140_PFPuppiMHT140, process.L1T_PFHT400PT30_QuadPFPuppiJet_70_55_40_40_2p4, process.L1T_DoublePFPuppiJets112_2p4_DEta1p6, process.HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepCSV_2p4, process.HLT_PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepCSV_2p4, process.HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepCSV_2p4, process.HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4, process.HLT_PFHT200PT30_QuadPFPuppiJet_70_40_30_30_TriplePFPuppiBTagDeepFlavour_2p4, process.HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4, process.L1_SingleTkMuon_22, process.L1_DoubleTkMuon_17_8, process.L1_TripleTkMuon_5_3_3, process.HLT_Mu50_FromL1TkMuon, process.HLT_IsoMu24_FromL1TkMuon, process.HLT_Mu37_Mu27_FromL1TkMuon, process.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_FromL1TkMuon, process.HLT_TriMu_10_5_5_DZ_FromL1TkMuon, process.HLT_Photon100_Open_Unseeded, process.HLT_Photon100EB_TightID_TightIso_Open_Unseeded, process.HLT_Ele32_WPTight_Unseeded, process.HLT_Ele26_WP70_Unseeded, process.HLT_Photon108EB_TightID_TightIso_Unseeded, process.HLT_Photon187_Unseeded, process.HLT_DoubleEle25_CaloIdL_PMS2_Unseeded, process.HLT_Diphoton30_23_IsoCaloId_Unseeded, process.HLT_Ele32_WPTight_L1Seeded, process.HLT_Ele26_WP70_L1Seeded, process.HLT_Photon108EB_TightID_TightIso_L1Seeded, process.HLT_Photon187_L1Seeded, process.HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded, process.HLT_Diphoton30_23_IsoCaloId_L1Seeded, process.HLT_DoubleEle23_12_Iso_L1Seeded, process.L1T_TkIsoEle22TkEm12, process.L1T_TkEle25TkEle12, process.L1T_TkEle36, process.L1T_TkEm37TkEm24, process.L1T_TkEm51, process.L1T_TkIsoEle28, process.L1T_TkIsoEm22TkIsoEm12, process.L1T_TkIsoEm36, process.L1T_DoubleNNTau52, process.L1T_DoubleTkMuon_15_7, process.L1T_SingleNNTau150, process.L1T_SingleTkMuon_22, process.MC_JME, process.MC_BTV, process.MC_Ele5_Open_Unseeded, process.MC_Ele5_WP70_Open_Unseeded, process.MC_Ele5_Open_L1Seeded, process.MC_Ele5_WP70_Open_L1Seeded ])
 

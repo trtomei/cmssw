@@ -483,11 +483,15 @@ process.load("HLT_75e33/paths/L1_DoubleTkMuon_17_8_cfi")
 process.load("HLT_75e33/paths/L1_SingleTkMuon_22_cfi")
 process.load("HLT_75e33/paths/L1_TripleTkMuon_5_3_3_cfi")
 process.load("HLT_75e33/paths/L1simulation_step_cfi")
+process.load("HLT_75e33/paths/L1T_DoubleNNTau52_cfi")
 process.load("HLT_75e33/paths/L1T_DoublePFPuppiJets112_2p4_DEta1p6_cfi")
+process.load("HLT_75e33/paths/L1T_DoubleTkMuon_15_7_cfi")
 process.load("HLT_75e33/paths/L1T_PFHT400PT30_QuadPFPuppiJet_70_55_40_40_2p4_cfi")
 process.load("HLT_75e33/paths/L1T_PFPuppiHT450off_cfi")
 process.load("HLT_75e33/paths/L1T_PFPuppiMET220off_cfi")
+process.load("HLT_75e33/paths/L1T_SingleNNTau150_cfi")
 process.load("HLT_75e33/paths/L1T_SinglePFPuppiJet230off_cfi")
+process.load("HLT_75e33/paths/L1T_SingleTkMuon_22_cfi")
 process.load("HLT_75e33/paths/L1T_TkEle25TkEle12_cfi")
 process.load("HLT_75e33/paths/L1T_TkEle36_cfi")
 process.load("HLT_75e33/paths/L1T_TkEm37TkEm24_cfi")
@@ -664,6 +668,12 @@ process.schedule = cms.Schedule(*[
     process.L1T_TkIsoEle28,
     process.L1T_TkIsoEm22TkIsoEm12,
     process.L1T_TkIsoEm36,
+
+    # Taus L1T seeds
+    process.L1T_DoubleNNTau52,
+    process.L1T_DoubleTkMuon_15_7,
+    process.L1T_SingleNNTau150,
+    process.L1T_SingleTkMuon_22,
 
     # MC-like paths, without any filters
     process.MC_JME,
