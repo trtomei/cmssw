@@ -458,27 +458,27 @@ process.load("HLT_75e33/paths/HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TripleP
 process.load("HLT_75e33/paths/HLT_PFPuppiHT1070_cfi")
 process.load("HLT_75e33/paths/HLT_PFPuppiMETTypeOne140_PFPuppiMHT140_cfi")
 process.load("HLT_75e33/paths/HLT_TriMu_10_5_5_DZ_FromL1TkMuon_cfi")
-process.load("HLT_75e33/paths/HLT_Ele5_Open_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Ele5_WP70_Open_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100_Open_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Ele32_WPTight_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Ele26_WP70_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Photon187_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_DoubleEle25_CaloIdL_PMS2_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_Unseeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Ele5_Open_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Ele5_WP70_Open_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100_Open_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Ele32_WPTight_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_DoubleEle23_12_Iso_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Ele26_WP70_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Photon187_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded_v1_cfi")
-process.load("HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_L1Seeded_v1_cfi")
+process.load("HLT_75e33/paths/MC_Ele5_Open_Unseeded_cfi")
+process.load("HLT_75e33/paths/MC_Ele5_WP70_Open_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon100_Open_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Ele32_WPTight_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Ele26_WP70_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon187_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_DoubleEle25_CaloIdL_PMS2_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_Unseeded_cfi")
+process.load("HLT_75e33/paths/MC_Ele5_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/MC_Ele5_WP70_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon100_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Ele32_WPTight_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_DoubleEle23_12_Iso_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Ele26_WP70_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon187_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_L1Seeded_cfi")
 process.load("HLT_75e33/paths/L1_DoubleTkMuon_17_8_cfi")
 process.load("HLT_75e33/paths/L1_SingleTkMuon_22_cfi")
 process.load("HLT_75e33/paths/L1_TripleTkMuon_5_3_3_cfi")
@@ -637,25 +637,25 @@ process.schedule = cms.Schedule(*[
     process.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_FromL1TkMuon,
     process.HLT_TriMu_10_5_5_DZ_FromL1TkMuon,
  
-    #egamma unseeded paths
-    process.HLT_Photon100_Open_Unseeded_v1,
-    process.HLT_Photon100EB_TightID_TightIso_Open_Unseeded_v1,
-    process.HLT_Ele32_WPTight_Unseeded_v1,
-    process.HLT_Ele26_WP70_Unseeded_v1,
-    process.HLT_Photon108EB_TightID_TightIso_Unseeded_v1,
-    process.HLT_Photon187_Unseeded_v1,
-    process.HLT_DoubleEle25_CaloIdL_PMS2_Unseeded_v1,
-    process.HLT_Diphoton30_23_IsoCaloId_Unseeded_v1,
-    #egamma seeded paths
-    process.HLT_Ele32_WPTight_L1Seeded_v1,
-    process.HLT_Ele26_WP70_L1Seeded_v1,
-    process.HLT_Photon108EB_TightID_TightIso_L1Seeded_v1,
-    process.HLT_Photon187_L1Seeded_v1,
-    process.HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded_v1,
-    process.HLT_Diphoton30_23_IsoCaloId_L1Seeded_v1,
-    process.HLT_DoubleEle23_12_Iso_L1Seeded_v1,
+    # E/Gamma unseeded paths
+    process.HLT_Photon100_Open_Unseeded,
+    process.HLT_Photon100EB_TightID_TightIso_Open_Unseeded,
+    process.HLT_Ele32_WPTight_Unseeded,
+    process.HLT_Ele26_WP70_Unseeded,
+    process.HLT_Photon108EB_TightID_TightIso_Unseeded,
+    process.HLT_Photon187_Unseeded,
+    process.HLT_DoubleEle25_CaloIdL_PMS2_Unseeded,
+    process.HLT_Diphoton30_23_IsoCaloId_Unseeded,
+    # E/Gamma seeded paths
+    process.HLT_Ele32_WPTight_L1Seeded,
+    process.HLT_Ele26_WP70_L1Seeded,
+    process.HLT_Photon108EB_TightID_TightIso_L1Seeded,
+    process.HLT_Photon187_L1Seeded,
+    process.HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded,
+    process.HLT_Diphoton30_23_IsoCaloId_L1Seeded,
+    process.HLT_DoubleEle23_12_Iso_L1Seeded,
     
-    #e/gamma L1T seeds
+    # E/Gamma L1T seeds
     process.L1T_TkIsoEle22TkEm12,
     process.L1T_TkEle25TkEle12,
     process.L1T_TkEle36,
@@ -665,13 +665,11 @@ process.schedule = cms.Schedule(*[
     process.L1T_TkIsoEm22TkIsoEm12,
     process.L1T_TkIsoEm36,
 
-    #egamma unfiltered paths
-    process.HLT_Ele5_Open_Unseeded_v1,
-    process.HLT_Ele5_WP70_Open_Unseeded_v1,
-    process.HLT_Ele5_Open_L1Seeded_v1,
-    process.HLT_Ele5_WP70_Open_L1Seeded_v1,
-    
     # MC-like paths, without any filters
     process.MC_JME,
     process.MC_BTV,
+    process.MC_Ele5_Open_Unseeded,
+    process.MC_Ele5_WP70_Open_Unseeded,
+    process.MC_Ele5_Open_L1Seeded,
+    process.MC_Ele5_WP70_Open_L1Seeded,
 ])
