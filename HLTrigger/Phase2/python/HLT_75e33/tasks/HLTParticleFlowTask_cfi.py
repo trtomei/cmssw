@@ -7,7 +7,6 @@ from ..modules.pixelVertices_cfi import *
 from ..modules.trackerClusterCheck_cfi import *
 from ..tasks.caloTowersRecTask_cfi import *
 from ..tasks.ecalClustersTask_cfi import *
-from ..tasks.globalmuontrackingTask_cfi import *
 from ..tasks.hcalGlobalRecoTask_cfi import *
 from ..tasks.hgcalLocalRecoTask_cfi import *
 from ..tasks.highlevelrecoTask_cfi import *
@@ -27,7 +26,6 @@ HLTParticleFlowTask = cms.Task(
     caloTowersRecTask,
     ecalClustersTask,
     generalTracks,
-    globalmuontrackingTask,
     hcalGlobalRecoTask,
     hgcalLocalRecoTask,
     highPtTripletStepTask,
