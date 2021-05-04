@@ -478,7 +478,7 @@ process.load("HLT_75e33/paths/HLT_TriMu_10_5_5_DZ_FromL1TkMuon_cfi")
 process.load("HLT_75e33/paths/L1T_DoubleNNTau52_cfi")
 process.load("HLT_75e33/paths/L1T_DoublePFPuppiJets112_2p4_DEta1p6_cfi")
 process.load("HLT_75e33/paths/L1T_DoubleTkMuon_15_7_cfi")
-process.load("HLT_75e33/paths/L1T_DoubleTkMuon_17_8_cfi")
+process.load("HLT_75e33/paths/L1T_DoubleTkMuon_15_7_cfi")
 process.load("HLT_75e33/paths/L1T_PFHT400PT30_QuadPFPuppiJet_70_55_40_40_2p4_cfi")
 process.load("HLT_75e33/paths/L1T_PFPuppiHT450off_cfi")
 process.load("HLT_75e33/paths/L1T_PFPuppiMET220off_cfi")
@@ -630,7 +630,7 @@ process.schedule = cms.Schedule(*[
 
     # Muons L1T paths
     process.L1T_SingleTkMuon_22,
-    process.L1T_DoubleTkMuon_17_8,
+    process.L1T_DoubleTkMuon_15_7,
     process.L1T_TripleTkMuon_5_3_3,
 
     # Muons HLT paths
