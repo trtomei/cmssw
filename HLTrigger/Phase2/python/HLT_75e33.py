@@ -466,10 +466,6 @@ process.load("HLT_75e33/paths/HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TripleP
 process.load("HLT_75e33/paths/HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4_cfi")
 process.load("HLT_75e33/paths/HLT_PFPuppiHT1070_cfi")
 process.load("HLT_75e33/paths/HLT_PFPuppiMETTypeOne140_PFPuppiMHT140_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_L1Seeded_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100_Open_L1Seeded_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100_Open_Unseeded_cfi")
 process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_L1Seeded_cfi")
 process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_Unseeded_cfi")
 process.load("HLT_75e33/paths/HLT_Photon187_L1Seeded_cfi")
@@ -500,8 +496,11 @@ process.load("HLT_75e33/paths/MC_Ele5_Open_Unseeded_cfi")
 process.load("HLT_75e33/paths/MC_Ele5_WP70_Open_L1Seeded_cfi")
 process.load("HLT_75e33/paths/MC_Ele5_WP70_Open_Unseeded_cfi")
 process.load("HLT_75e33/paths/MC_JME_cfi")
+process.load("HLT_75e33/paths/MC_Photon100EB_TightID_TightIso_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/MC_Photon100EB_TightID_TightIso_Open_Unseeded_cfi")
+process.load("HLT_75e33/paths/MC_Photon100_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/MC_Photon100_Open_Unseeded_cfi")
 process.load("HLT_75e33/paths/l1tReconstructionPath_cfi")
-process.load("HLT_75e33/paths/runTheL1P2_step_cfi")
 process.load("HLT_75e33/psets/CkfBaseTrajectoryFilter_block_cfi")
 process.load("HLT_75e33/psets/ckfBaseTrajectoryFilterP5_cfi")
 process.load("HLT_75e33/psets/CkfTrajectoryBuilder_cfi")
@@ -640,8 +639,6 @@ process.schedule = cms.Schedule(*[
     process.HLT_TriMu_10_5_5_DZ_FromL1TkMuon,
  
     # E/Gamma unseeded paths
-    process.HLT_Photon100_Open_Unseeded,
-    process.HLT_Photon100EB_TightID_TightIso_Open_Unseeded,
     process.HLT_Ele32_WPTight_Unseeded,
     process.HLT_Ele26_WP70_Unseeded,
     process.HLT_Photon108EB_TightID_TightIso_Unseeded,
@@ -678,4 +675,8 @@ process.schedule = cms.Schedule(*[
     process.MC_Ele5_WP70_Open_Unseeded,
     process.MC_Ele5_Open_L1Seeded,
     process.MC_Ele5_WP70_Open_L1Seeded,
+    process.MC_Photon100_Open_Unseeded,
+    process.MC_Photon100EB_TightID_TightIso_Open_Unseeded,
+    process.MC_Photon100_Open_L1Seeded,
+    process.MC_Photon100EB_TightID_TightIso_Open_L1Seeded,
 ])
