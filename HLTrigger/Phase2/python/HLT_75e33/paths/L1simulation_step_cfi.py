@@ -15,4 +15,21 @@ from ..modules.simRctDigis_cfi import *
 from ..modules.simRpcTechTrigDigis_cfi import *
 from ..modules.simRpcTriggerDigis_cfi import *
 
-L1simulation_step = cms.Path(cms.Task(simBscDigis, simCastorTechTrigDigis, simCscTriggerPrimitiveDigis, simCsctfDigis, simCsctfTrackDigis, simDtTriggerPrimitiveDigis, simDttfDigis, simGctDigis, simGmtDigis, simGtDigis, simHcalTechTrigDigis, simRctDigis, simRpcTechTrigDigis, simRpcTriggerDigis))
+L1simulation_step = cms.Path(
+    cms.Task(
+        simBscDigis,
+        simCastorTechTrigDigis,
+        simCscTriggerPrimitiveDigis,
+        simCsctfDigis,
+        simCsctfTrackDigis,
+        simDtTriggerPrimitiveDigis,
+        simDttfDigis,
+        simGctDigis,
+        simGmtDigis,
+        simGtDigis,
+        simHcalTechTrigDigis,
+        simRctDigis,
+        simRpcTechTrigDigis,
+        simRpcTriggerDigis
+    )
+)

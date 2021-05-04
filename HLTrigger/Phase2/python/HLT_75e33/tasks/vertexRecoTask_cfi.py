@@ -12,4 +12,16 @@ from ..modules.unsortedOfflinePrimaryVertices_cfi import *
 from ..modules.vertexMerger_cfi import *
 from ..tasks.initialStepPVTask_cfi import *
 
-vertexRecoTask = cms.Task(ak4CaloJetsForTrk, inclusiveSecondaryVertices, inclusiveVertexFinder, initialStepPVTask, offlinePrimaryVertices, offlinePrimaryVerticesWithBS, trackRefsForJetsBeforeSorting, trackVertexArbitrator, trackWithVertexRefSelectorBeforeSorting, unsortedOfflinePrimaryVertices, vertexMerger)
+vertexRecoTask = cms.Task(
+    ak4CaloJetsForTrk,
+    inclusiveSecondaryVertices,
+    inclusiveVertexFinder,
+    initialStepPVTask,
+    offlinePrimaryVertices,
+    offlinePrimaryVerticesWithBS,
+    trackRefsForJetsBeforeSorting,
+    trackVertexArbitrator,
+    trackWithVertexRefSelectorBeforeSorting,
+    unsortedOfflinePrimaryVertices,
+    vertexMerger
+)

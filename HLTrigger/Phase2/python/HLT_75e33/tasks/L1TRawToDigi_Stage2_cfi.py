@@ -11,4 +11,15 @@ from ..modules.rpcCPPFRawToDigi_cfi import *
 from ..modules.rpcTwinMuxRawToDigi_cfi import *
 from ..modules.twinMuxStage2Digis_cfi import *
 
-L1TRawToDigi_Stage2 = cms.Task(bmtfDigis, caloLayer1Digis, caloStage2Digis, emtfStage2Digis, gmtStage2Digis, gtStage2Digis, omtfStage2Digis, rpcCPPFRawToDigi, rpcTwinMuxRawToDigi, twinMuxStage2Digis)
+L1TRawToDigi_Stage2 = cms.Task(
+    bmtfDigis,
+    caloLayer1Digis,
+    caloStage2Digis,
+    emtfStage2Digis,
+    gmtStage2Digis,
+    gtStage2Digis,
+    omtfStage2Digis,
+    rpcCPPFRawToDigi,
+    rpcTwinMuxRawToDigi,
+    twinMuxStage2Digis
+)

@@ -8,4 +8,12 @@ from ..modules.particleFlowClusterHGCal_cfi import *
 from ..modules.particleFlowClusterHGCalFromMultiCl_cfi import *
 from ..modules.particleFlowRecHitHGC_cfi import *
 
-hgcalLocalRecoTask = cms.Task(HGCalRecHit, HGCalUncalibRecHit, hgcalLayerClusters, hgcalMultiClusters, particleFlowClusterHGCal, particleFlowClusterHGCalFromMultiCl, particleFlowRecHitHGC)
+hgcalLocalRecoTask = cms.Task(
+    HGCalRecHit,
+    HGCalUncalibRecHit,
+    hgcalLayerClusters,
+    hgcalMultiClusters,
+    particleFlowClusterHGCal,
+    particleFlowClusterHGCalFromMultiCl,
+    particleFlowRecHitHGC
+)

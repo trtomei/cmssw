@@ -22,4 +22,26 @@ from ..tasks.pixelTracksTask_cfi import *
 from ..tasks.RawToDigiTask_cfi import *
 from ..tasks.vertexRecoTask_cfi import *
 
-HLTParticleFlowTask = cms.Task(RawToDigiTask, caloTowersRecTask, ecalClustersTask, generalTracks, globalmuontrackingTask, hcalGlobalRecoTask, hgcalLocalRecoTask, highPtTripletStepTask, highlevelrecoTask, hltAK4CaloJets, initialStepTask, itLocalRecoTask, iterTICLTask, localrecoTask, offlineBeamSpot, otLocalRecoTask, particleFlowClusterTask, pixelTracksTask, pixelVertices, trackerClusterCheck, vertexRecoTask)
+HLTParticleFlowTask = cms.Task(
+    RawToDigiTask,
+    caloTowersRecTask,
+    ecalClustersTask,
+    generalTracks,
+    globalmuontrackingTask,
+    hcalGlobalRecoTask,
+    hgcalLocalRecoTask,
+    highPtTripletStepTask,
+    highlevelrecoTask,
+    hltAK4CaloJets,
+    initialStepTask,
+    itLocalRecoTask,
+    iterTICLTask,
+    localrecoTask,
+    offlineBeamSpot,
+    otLocalRecoTask,
+    particleFlowClusterTask,
+    pixelTracksTask,
+    pixelVertices,
+    trackerClusterCheck,
+    vertexRecoTask
+)

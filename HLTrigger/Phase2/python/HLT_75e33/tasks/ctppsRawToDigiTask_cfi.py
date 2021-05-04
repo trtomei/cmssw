@@ -6,4 +6,10 @@ from ..modules.totemRPRawToDigi_cfi import *
 from ..modules.totemTimingRawToDigi_cfi import *
 from ..modules.totemTriggerRawToDigi_cfi import *
 
-ctppsRawToDigiTask = cms.Task(ctppsDiamondRawToDigi, ctppsPixelDigis, totemRPRawToDigi, totemTimingRawToDigi, totemTriggerRawToDigi)
+ctppsRawToDigiTask = cms.Task(
+    ctppsDiamondRawToDigi,
+    ctppsPixelDigis,
+    totemRPRawToDigi,
+    totemTimingRawToDigi,
+    totemTriggerRawToDigi
+)

@@ -8,4 +8,12 @@ from ..modules.dttfDigis_cfi import *
 from ..modules.gctDigis_cfi import *
 from ..modules.gtDigis_cfi import *
 
-L1TRawToDigi_Stage1 = cms.Task(caloStage1Digis, caloStage1FinalDigis, caloStage1LegacyFormatDigis, csctfDigis, dttfDigis, gctDigis, gtDigis)
+L1TRawToDigi_Stage1 = cms.Task(
+    caloStage1Digis,
+    caloStage1FinalDigis,
+    caloStage1LegacyFormatDigis,
+    csctfDigis,
+    dttfDigis,
+    gctDigis,
+    gtDigis
+)

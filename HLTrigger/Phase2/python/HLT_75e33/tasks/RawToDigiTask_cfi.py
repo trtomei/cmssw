@@ -15,4 +15,19 @@ from ..tasks.ctppsRawToDigiTask_cfi import *
 from ..tasks.ecalDigisTask_cfi import *
 from ..tasks.L1TRawToDigiTask_cfi import *
 
-RawToDigiTask = cms.Task(L1TRawToDigiTask, ctppsRawToDigiTask, ecalDigisTask, ecalPreshowerDigis, hcalDigis, hgcalDigis, muonCSCDigis, muonDTDigis, muonGEMDigis, muonRPCDigis, onlineMetaDataDigis, scalersRawToDigi, siStripDigis, tcdsDigis)
+RawToDigiTask = cms.Task(
+    L1TRawToDigiTask,
+    ctppsRawToDigiTask,
+    ecalDigisTask,
+    ecalPreshowerDigis,
+    hcalDigis,
+    hgcalDigis,
+    muonCSCDigis,
+    muonDTDigis,
+    muonGEMDigis,
+    muonRPCDigis,
+    onlineMetaDataDigis,
+    scalersRawToDigi,
+    siStripDigis,
+    tcdsDigis
+)

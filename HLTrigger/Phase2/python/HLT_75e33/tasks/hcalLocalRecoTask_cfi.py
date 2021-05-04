@@ -5,4 +5,9 @@ from ..modules.hfreco_cfi import *
 from ..modules.horeco_cfi import *
 from ..modules.zdcreco_cfi import *
 
-hcalLocalRecoTask = cms.Task(hfprereco, hfreco, horeco, zdcreco)
+hcalLocalRecoTask = cms.Task(
+    hfprereco,
+    hfreco,
+    horeco,
+    zdcreco
+)

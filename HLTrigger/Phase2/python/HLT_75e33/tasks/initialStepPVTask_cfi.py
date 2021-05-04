@@ -6,4 +6,10 @@ from ..modules.firstStepPrimaryVertices_cfi import *
 from ..modules.firstStepPrimaryVerticesUnsorted_cfi import *
 from ..modules.initialStepTrackRefsForJets_cfi import *
 
-initialStepPVTask = cms.Task(ak4CaloJetsForTrk, caloTowerForTrk, firstStepPrimaryVertices, firstStepPrimaryVerticesUnsorted, initialStepTrackRefsForJets)
+initialStepPVTask = cms.Task(
+    ak4CaloJetsForTrk,
+    caloTowerForTrk,
+    firstStepPrimaryVertices,
+    firstStepPrimaryVerticesUnsorted,
+    initialStepTrackRefsForJets
+)
