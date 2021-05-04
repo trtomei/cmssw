@@ -445,8 +445,17 @@ process.load("HLT_75e33/eventsetup/XMLIdealGeometryESSource_cfi")
 process.load("HLT_75e33/eventsetup/XMLIdealGeometryESSource_CTPPS_cfi")
 process.load("HLT_75e33/eventsetup/ZdcHardcodeGeometryEP_cfi")
 process.load("HLT_75e33/paths/HLT_AK4PFPuppiJet520_cfi")
+process.load("HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_DoubleEle23_12_Iso_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_DoubleEle25_CaloIdL_PMS2_Unseeded_cfi")
 process.load("HLT_75e33/paths/HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepCSV_2p4_cfi")
 process.load("HLT_75e33/paths/HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4_cfi")
+process.load("HLT_75e33/paths/HLT_Ele26_WP70_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Ele26_WP70_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Ele32_WPTight_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Ele32_WPTight_Unseeded_cfi")
 process.load("HLT_75e33/paths/HLT_IsoMu24_FromL1TkMuon_cfi")
 process.load("HLT_75e33/paths/HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_FromL1TkMuon_cfi")
 process.load("HLT_75e33/paths/HLT_Mu37_Mu27_FromL1TkMuon_cfi")
@@ -457,35 +466,19 @@ process.load("HLT_75e33/paths/HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TripleP
 process.load("HLT_75e33/paths/HLT_PFHT330PT30_QuadPFPuppiJet_75_60_45_40_TriplePFPuppiBTagDeepFlavour_2p4_cfi")
 process.load("HLT_75e33/paths/HLT_PFPuppiHT1070_cfi")
 process.load("HLT_75e33/paths/HLT_PFPuppiMETTypeOne140_PFPuppiMHT140_cfi")
-process.load("HLT_75e33/paths/HLT_TriMu_10_5_5_DZ_FromL1TkMuon_cfi")
-process.load("HLT_75e33/paths/MC_Ele5_Open_Unseeded_cfi")
-process.load("HLT_75e33/paths/MC_Ele5_WP70_Open_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100_Open_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_Ele32_WPTight_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_Ele26_WP70_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_Photon187_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_DoubleEle25_CaloIdL_PMS2_Unseeded_cfi")
-process.load("HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_Unseeded_cfi")
-process.load("HLT_75e33/paths/MC_Ele5_Open_L1Seeded_cfi")
-process.load("HLT_75e33/paths/MC_Ele5_WP70_Open_L1Seeded_cfi")
-process.load("HLT_75e33/paths/HLT_Photon100_Open_L1Seeded_cfi")
 process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_L1Seeded_cfi")
-process.load("HLT_75e33/paths/HLT_Ele32_WPTight_L1Seeded_cfi")
-process.load("HLT_75e33/paths/HLT_DoubleEle23_12_Iso_L1Seeded_cfi")
-process.load("HLT_75e33/paths/HLT_Ele26_WP70_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon100EB_TightID_TightIso_Open_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon100_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon100_Open_Unseeded_cfi")
 process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_L1Seeded_cfi")
+process.load("HLT_75e33/paths/HLT_Photon108EB_TightID_TightIso_Unseeded_cfi")
 process.load("HLT_75e33/paths/HLT_Photon187_L1Seeded_cfi")
-process.load("HLT_75e33/paths/HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded_cfi")
-process.load("HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_L1Seeded_cfi")
-process.load("HLT_75e33/paths/L1_DoubleTkMuon_17_8_cfi")
-process.load("HLT_75e33/paths/L1_SingleTkMuon_22_cfi")
-process.load("HLT_75e33/paths/L1_TripleTkMuon_5_3_3_cfi")
-process.load("HLT_75e33/paths/L1simulation_step_cfi")
+process.load("HLT_75e33/paths/HLT_Photon187_Unseeded_cfi")
+process.load("HLT_75e33/paths/HLT_TriMu_10_5_5_DZ_FromL1TkMuon_cfi")
 process.load("HLT_75e33/paths/L1T_DoubleNNTau52_cfi")
 process.load("HLT_75e33/paths/L1T_DoublePFPuppiJets112_2p4_DEta1p6_cfi")
 process.load("HLT_75e33/paths/L1T_DoubleTkMuon_15_7_cfi")
+process.load("HLT_75e33/paths/L1T_DoubleTkMuon_17_8_cfi")
 process.load("HLT_75e33/paths/L1T_PFHT400PT30_QuadPFPuppiJet_70_55_40_40_2p4_cfi")
 process.load("HLT_75e33/paths/L1T_PFPuppiHT450off_cfi")
 process.load("HLT_75e33/paths/L1T_PFPuppiMET220off_cfi")
@@ -496,13 +489,19 @@ process.load("HLT_75e33/paths/L1T_TkEle25TkEle12_cfi")
 process.load("HLT_75e33/paths/L1T_TkEle36_cfi")
 process.load("HLT_75e33/paths/L1T_TkEm37TkEm24_cfi")
 process.load("HLT_75e33/paths/L1T_TkEm51_cfi")
+process.load("HLT_75e33/paths/L1T_TkIsoEle22TkEm12_cfi")
 process.load("HLT_75e33/paths/L1T_TkIsoEle28_cfi")
 process.load("HLT_75e33/paths/L1T_TkIsoEm22TkIsoEm12_cfi")
 process.load("HLT_75e33/paths/L1T_TkIsoEm36_cfi")
-process.load("HLT_75e33/paths/L1T_TkIsoEle22TkEm12_cfi")
-process.load("HLT_75e33/paths/l1tReconstructionPath_cfi")
-process.load("HLT_75e33/paths/MC_JME_cfi")
+process.load("HLT_75e33/paths/L1T_TripleTkMuon_5_3_3_cfi")
+process.load("HLT_75e33/paths/L1simulation_step_cfi")
 process.load("HLT_75e33/paths/MC_BTV_cfi")
+process.load("HLT_75e33/paths/MC_Ele5_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/MC_Ele5_Open_Unseeded_cfi")
+process.load("HLT_75e33/paths/MC_Ele5_WP70_Open_L1Seeded_cfi")
+process.load("HLT_75e33/paths/MC_Ele5_WP70_Open_Unseeded_cfi")
+process.load("HLT_75e33/paths/MC_JME_cfi")
+process.load("HLT_75e33/paths/l1tReconstructionPath_cfi")
 process.load("HLT_75e33/paths/runTheL1P2_step_cfi")
 process.load("HLT_75e33/psets/CkfBaseTrajectoryFilter_block_cfi")
 process.load("HLT_75e33/psets/ckfBaseTrajectoryFilterP5_cfi")
@@ -630,9 +629,9 @@ process.schedule = cms.Schedule(*[
     process.HLT_DoublePFPuppiJets128_DoublePFPuppiBTagDeepFlavour_2p4,
 
     # Muons L1T paths
-    process.L1_SingleTkMuon_22,
-    process.L1_DoubleTkMuon_17_8,
-    process.L1_TripleTkMuon_5_3_3,
+    process.L1T_SingleTkMuon_22,
+    process.L1T_DoubleTkMuon_17_8,
+    process.L1T_TripleTkMuon_5_3_3,
 
     # Muons HLT paths
     process.HLT_Mu50_FromL1TkMuon,
@@ -673,7 +672,6 @@ process.schedule = cms.Schedule(*[
     process.L1T_DoubleNNTau52,
     process.L1T_DoubleTkMuon_15_7,
     process.L1T_SingleNNTau150,
-    process.L1T_SingleTkMuon_22,
 
     # MC-like paths, without any filters
     process.MC_JME,
