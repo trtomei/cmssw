@@ -13266,6 +13266,394 @@ process.l1EGammaEEProducer = cms.EDProducer("L1EGammaEEProducer",
 )
 
 
+process.l1NNTauProducerPuppi = cms.EDProducer("L1NNTauProducer",
+    L1PFObjects = cms.InputTag("l1pfCandidates","Puppi"),
+    NNFileName = cms.string('L1Trigger/Phase2L1ParticleFlow/data/tau_3layer_puppi.pb'),
+    conesize = cms.double(0.4),
+    maxtaus = cms.int32(5),
+    mightGet = cms.optional.untracked.vstring,
+    nparticles = cms.int32(10),
+    seedpt = cms.double(20),
+    tausize = cms.double(0.1)
+)
+
+
+process.l1PFMetPuppi = cms.EDProducer("PFMETProducer",
+    alias = cms.string('@module_label'),
+    applyWeight = cms.bool(False),
+    calculateSignificance = cms.bool(False),
+    globalThreshold = cms.double(0),
+    mightGet = cms.optional.untracked.vstring,
+    parameters = cms.PSet(
+
+    ),
+    src = cms.InputTag("l1pfCandidates","Puppi"),
+    srcJetResPhi = cms.optional.string,
+    srcJetResPt = cms.optional.string,
+    srcJetSF = cms.optional.string,
+    srcJets = cms.optional.InputTag,
+    srcLeptons = cms.optional.VInputTag,
+    srcRho = cms.optional.InputTag,
+    srcWeights = cms.InputTag("")
+)
+
+
+process.l1pfCandidates = cms.EDProducer("L1TPFCandMultiMerger",
+    labelsToMerge = cms.vstring(
+        'Calo',
+        'TK',
+        'TKVtx',
+        'PF',
+        'Puppi'
+    ),
+    pfProducers = cms.VInputTag(cms.InputTag("l1pfProducerBarrel"), cms.InputTag("l1pfProducerHGCal"), cms.InputTag("l1pfProducerHGCalNoTK"), cms.InputTag("l1pfProducerHF"))
+)
+
+
+process.l1pfProducerBarrel = cms.EDProducer("L1TPFProducer",
+    debug = cms.untracked.int32(0),
+    emClusters = cms.VInputTag(cms.InputTag("pfClustersFromL1EGClusters")),
+    emPtCut = cms.double(0.5),
+    etaCharged = cms.double(2.5),
+    hadClusters = cms.VInputTag(cms.InputTag("pfClustersFromCombinedCaloHCal","calibrated")),
+    hadPtCut = cms.double(1.0),
+    linking = cms.PSet(
+        caloEmPtMinFrac = cms.double(0.5),
+        caloReLink = cms.bool(False),
+        caloReLinkDR = cms.double(0.3),
+        caloReLinkThreshold = cms.double(0.5),
+        ecalPriority = cms.bool(True),
+        emCaloDR = cms.double(0.1),
+        emCaloSubtractionPtSlope = cms.double(1.2),
+        emCaloUseAlsoCaloSigma = cms.bool(True),
+        maxInvisiblePt = cms.double(10.0),
+        rescaleTracks = cms.bool(False),
+        rescaleUnmatchedTrack = cms.bool(False),
+        sumTkCaloErr2 = cms.bool(True),
+        tightTrackMaxChi2 = cms.double(50),
+        tightTrackMaxInvisiblePt = cms.double(20),
+        tightTrackMinStubs = cms.uint32(6),
+        trackCaloDR = cms.double(0.15),
+        trackCaloLinkMetric = cms.string('bestByDRPt'),
+        trackCaloNSigmaHigh = cms.double(1.0),
+        trackCaloNSigmaLow = cms.double(2.0),
+        trackEmDR = cms.double(0.04),
+        trackEmMayUseCaloMomenta = cms.bool(True),
+        trackEmUseAlsoTrackSigma = cms.bool(True),
+        trackMuDR = cms.double(0.2),
+        trackMuMatch = cms.string('boxBestByPtRatio'),
+        useCaloTrkWeightedAverage = cms.bool(False),
+        useTrackCaloSigma = cms.bool(True)
+    ),
+    muons = cms.InputTag("simGmtStage2Digis"),
+    pfAlgo = cms.string('PFAlgo3'),
+    puAlgo = cms.string('LinearizedPuppi'),
+    puppiAlphaCrops = cms.vdouble(4),
+    puppiAlphaCropsPhotons = cms.vdouble(4),
+    puppiAlphaSlopes = cms.vdouble(0.7),
+    puppiAlphaSlopesPhotons = cms.vdouble(0.7),
+    puppiAlphaZeros = cms.vdouble(6.0),
+    puppiAlphaZerosPhotons = cms.vdouble(6.0),
+    puppiDr = cms.double(0.3),
+    puppiDrMin = cms.double(0.07),
+    puppiEtaCuts = cms.vdouble(1.6),
+    puppiPriors = cms.vdouble(5.0),
+    puppiPriorsPhotons = cms.vdouble(1.0),
+    puppiPtCuts = cms.vdouble(1.0),
+    puppiPtCutsPhotons = cms.vdouble(1.0),
+    puppiPtMax = cms.double(50.0),
+    puppiPtSlopes = cms.vdouble(0.3),
+    puppiPtSlopesPhotons = cms.vdouble(0.3),
+    puppiPtZeros = cms.vdouble(4.0),
+    puppiPtZerosPhotons = cms.vdouble(2.5),
+    puppiUsingBareTracks = cms.bool(True),
+    regions = cms.VPSet(cms.PSet(
+        etaBoundaries = cms.vdouble(-1.5, 1.5),
+        etaExtra = cms.double(0.3),
+        phiExtra = cms.double(0.0),
+        phiSlices = cms.uint32(1)
+    )),
+    tkMuons = cms.InputTag("L1TkMuons"),
+    trackRegionMode = cms.string('atCalo'),
+    tracks = cms.InputTag("pfTracksFromL1TracksBarrel"),
+    trkMaxChi2 = cms.double(15),
+    trkMinStubs = cms.uint32(4),
+    trkPtCut = cms.double(2.0),
+    useRelativeRegionalCoordinates = cms.bool(False),
+    useStandaloneMuons = cms.bool(True),
+    useTrackerMuons = cms.bool(False),
+    vtxAdaptiveCut = cms.bool(True),
+    vtxAlgo = cms.string('external'),
+    vtxCollection = cms.InputTag("L1TkPrimaryVertex"),
+    vtxFormat = cms.string('TkPrimaryVertex'),
+    vtxRes = cms.double(0.333)
+)
+
+
+process.l1pfProducerHF = cms.EDProducer("L1TPFProducer",
+    debug = cms.untracked.int32(0),
+    emClusters = cms.VInputTag(),
+    emPtCut = cms.double(0.5),
+    etaCharged = cms.double(2.5),
+    hadClusters = cms.VInputTag(cms.InputTag("pfClustersFromCombinedCaloHF","calibrated")),
+    hadPtCut = cms.double(15),
+    linking = cms.PSet(
+        caloEmPtMinFrac = cms.double(0.5),
+        caloReLink = cms.bool(False),
+        caloReLinkDR = cms.double(0.3),
+        caloReLinkThreshold = cms.double(0.5),
+        ecalPriority = cms.bool(True),
+        emCaloDR = cms.double(0.1),
+        emCaloSubtractionPtSlope = cms.double(1.2),
+        emCaloUseAlsoCaloSigma = cms.bool(True),
+        maxInvisiblePt = cms.double(10.0),
+        rescaleTracks = cms.bool(False),
+        rescaleUnmatchedTrack = cms.bool(False),
+        sumTkCaloErr2 = cms.bool(True),
+        tightTrackMaxChi2 = cms.double(50),
+        tightTrackMaxInvisiblePt = cms.double(20),
+        tightTrackMinStubs = cms.uint32(6),
+        trackCaloDR = cms.double(0.15),
+        trackCaloLinkMetric = cms.string('bestByDRPt'),
+        trackCaloNSigmaHigh = cms.double(1.0),
+        trackCaloNSigmaLow = cms.double(2.0),
+        trackEmDR = cms.double(0.04),
+        trackEmMayUseCaloMomenta = cms.bool(True),
+        trackEmUseAlsoTrackSigma = cms.bool(True),
+        trackMuDR = cms.double(0.2),
+        trackMuMatch = cms.string('boxBestByPtRatio'),
+        useCaloTrkWeightedAverage = cms.bool(False),
+        useTrackCaloSigma = cms.bool(True)
+    ),
+    muons = cms.InputTag("simGmtStage2Digis"),
+    pfAlgo = cms.string('PFAlgo3'),
+    puAlgo = cms.string('LinearizedPuppi'),
+    puppiAlphaCrops = cms.vdouble(4),
+    puppiAlphaCropsPhotons = cms.vdouble(4),
+    puppiAlphaSlopes = cms.vdouble(0.6),
+    puppiAlphaSlopesPhotons = cms.vdouble(0.6),
+    puppiAlphaZeros = cms.vdouble(9.0),
+    puppiAlphaZerosPhotons = cms.vdouble(9.0),
+    puppiDr = cms.double(0.3),
+    puppiDrMin = cms.double(0.1),
+    puppiEtaCuts = cms.vdouble(5.5),
+    puppiPriors = cms.vdouble(6.0),
+    puppiPriorsPhotons = cms.vdouble(6.0),
+    puppiPtCuts = cms.vdouble(10.0),
+    puppiPtCutsPhotons = cms.vdouble(10.0),
+    puppiPtMax = cms.double(100.0),
+    puppiPtSlopes = cms.vdouble(0.25),
+    puppiPtSlopesPhotons = cms.vdouble(0.25),
+    puppiPtZeros = cms.vdouble(14.0),
+    puppiPtZerosPhotons = cms.vdouble(14.0),
+    puppiUsingBareTracks = cms.bool(False),
+    regions = cms.VPSet(
+        cms.PSet(
+            etaBoundaries = cms.vdouble(-5.5, -3),
+            etaExtra = cms.double(0.0),
+            phiExtra = cms.double(0.0),
+            phiSlices = cms.uint32(1)
+        ),
+        cms.PSet(
+            etaBoundaries = cms.vdouble(3, 5.5),
+            etaExtra = cms.double(0.0),
+            phiExtra = cms.double(0.0),
+            phiSlices = cms.uint32(1)
+        )
+    ),
+    tkMuons = cms.InputTag("L1TkMuons"),
+    trackRegionMode = cms.string('atCalo'),
+    tracks = cms.InputTag(""),
+    trkMaxChi2 = cms.double(15),
+    trkMinStubs = cms.uint32(4),
+    trkPtCut = cms.double(2.0),
+    useRelativeRegionalCoordinates = cms.bool(False),
+    useStandaloneMuons = cms.bool(True),
+    useTrackerMuons = cms.bool(False),
+    vtxAdaptiveCut = cms.bool(True),
+    vtxAlgo = cms.string('external'),
+    vtxCollection = cms.InputTag("L1TkPrimaryVertex"),
+    vtxFormat = cms.string('TkPrimaryVertex'),
+    vtxRes = cms.double(0.333)
+)
+
+
+process.l1pfProducerHGCal = cms.EDProducer("L1TPFProducer",
+    debug = cms.untracked.int32(0),
+    emClusters = cms.VInputTag(),
+    emPtCut = cms.double(0.5),
+    etaCharged = cms.double(2.5),
+    hadClusters = cms.VInputTag(cms.InputTag("pfClustersFromHGC3DClusters")),
+    hadPtCut = cms.double(1.0),
+    linking = cms.PSet(
+        caloEmPtMinFrac = cms.double(0.5),
+        caloReLink = cms.bool(False),
+        caloReLinkDR = cms.double(0.3),
+        caloReLinkThreshold = cms.double(0.5),
+        ecalPriority = cms.bool(False),
+        emCaloDR = cms.double(0.1),
+        emCaloSubtractionPtSlope = cms.double(1.2),
+        emCaloUseAlsoCaloSigma = cms.bool(True),
+        maxInvisiblePt = cms.double(10.0),
+        rescaleTracks = cms.bool(False),
+        rescaleUnmatchedTrack = cms.bool(False),
+        sumTkCaloErr2 = cms.bool(True),
+        tightTrackMaxChi2 = cms.double(50),
+        tightTrackMaxInvisiblePt = cms.double(20),
+        tightTrackMinStubs = cms.uint32(6),
+        trackCaloDR = cms.double(0.1),
+        trackCaloLinkMetric = cms.string('bestByDRPt'),
+        trackCaloNSigmaHigh = cms.double(1.0),
+        trackCaloNSigmaLow = cms.double(2.0),
+        trackEmDR = cms.double(0.04),
+        trackEmMayUseCaloMomenta = cms.bool(True),
+        trackEmUseAlsoTrackSigma = cms.bool(True),
+        trackMuDR = cms.double(0.2),
+        trackMuMatch = cms.string('boxBestByPtRatio'),
+        useCaloTrkWeightedAverage = cms.bool(False),
+        useTrackCaloSigma = cms.bool(True)
+    ),
+    muons = cms.InputTag("simGmtStage2Digis"),
+    pfAlgo = cms.string('PFAlgo2HGC'),
+    puAlgo = cms.string('LinearizedPuppi'),
+    puppiAlphaCrops = cms.vdouble(3, 3, 4),
+    puppiAlphaCropsPhotons = cms.vdouble(3, 3, 4),
+    puppiAlphaSlopes = cms.vdouble(1.5, 1.5, 2.2),
+    puppiAlphaSlopesPhotons = cms.vdouble(1.5, 1.5, 2.2),
+    puppiAlphaZeros = cms.vdouble(6.0, 6.0, 9.0),
+    puppiAlphaZerosPhotons = cms.vdouble(6.0, 6.0, 9.0),
+    puppiDr = cms.double(0.3),
+    puppiDrMin = cms.double(0.04),
+    puppiEtaCuts = cms.vdouble(2.0, 2.4, 3.1),
+    puppiPriors = cms.vdouble(5.0, 5.0, 7.0),
+    puppiPriorsPhotons = cms.vdouble(1.5, 1.5, 5.0),
+    puppiPtCuts = cms.vdouble(1.0, 2.0, 4.0),
+    puppiPtCutsPhotons = cms.vdouble(1.0, 2.0, 4.0),
+    puppiPtMax = cms.double(50.0),
+    puppiPtSlopes = cms.vdouble(0.3, 0.3, 0.3),
+    puppiPtSlopesPhotons = cms.vdouble(0.4, 0.4, 0.4),
+    puppiPtZeros = cms.vdouble(5.0, 7.0, 9.0),
+    puppiPtZerosPhotons = cms.vdouble(3.0, 4.0, 5.0),
+    puppiUsingBareTracks = cms.bool(True),
+    regions = cms.VPSet(
+        cms.PSet(
+            etaBoundaries = cms.vdouble(-2.5, -1.5),
+            etaExtra = cms.double(0.3),
+            phiExtra = cms.double(0.0),
+            phiSlices = cms.uint32(1)
+        ),
+        cms.PSet(
+            etaBoundaries = cms.vdouble(1.5, 2.5),
+            etaExtra = cms.double(0.3),
+            phiExtra = cms.double(0.0),
+            phiSlices = cms.uint32(1)
+        )
+    ),
+    tkMuons = cms.InputTag("L1TkMuons"),
+    trackRegionMode = cms.string('atCalo'),
+    tracks = cms.InputTag("pfTracksFromL1TracksHGCal"),
+    trkMaxChi2 = cms.double(15),
+    trkMinStubs = cms.uint32(4),
+    trkPtCut = cms.double(2.0),
+    useRelativeRegionalCoordinates = cms.bool(False),
+    useStandaloneMuons = cms.bool(True),
+    useTrackerMuons = cms.bool(False),
+    vtxAdaptiveCut = cms.bool(True),
+    vtxAlgo = cms.string('external'),
+    vtxCollection = cms.InputTag("L1TkPrimaryVertex"),
+    vtxFormat = cms.string('TkPrimaryVertex'),
+    vtxRes = cms.double(0.333)
+)
+
+
+process.l1pfProducerHGCalNoTK = cms.EDProducer("L1TPFProducer",
+    debug = cms.untracked.int32(0),
+    emClusters = cms.VInputTag(),
+    emPtCut = cms.double(0.5),
+    etaCharged = cms.double(2.5),
+    hadClusters = cms.VInputTag(cms.InputTag("pfClustersFromHGC3DClusters")),
+    hadPtCut = cms.double(1.0),
+    linking = cms.PSet(
+        caloEmPtMinFrac = cms.double(0.5),
+        caloReLink = cms.bool(False),
+        caloReLinkDR = cms.double(0.3),
+        caloReLinkThreshold = cms.double(0.5),
+        ecalPriority = cms.bool(False),
+        emCaloDR = cms.double(0.1),
+        emCaloSubtractionPtSlope = cms.double(1.2),
+        emCaloUseAlsoCaloSigma = cms.bool(True),
+        maxInvisiblePt = cms.double(10.0),
+        rescaleTracks = cms.bool(False),
+        rescaleUnmatchedTrack = cms.bool(False),
+        sumTkCaloErr2 = cms.bool(True),
+        tightTrackMaxChi2 = cms.double(50),
+        tightTrackMaxInvisiblePt = cms.double(20),
+        tightTrackMinStubs = cms.uint32(6),
+        trackCaloDR = cms.double(0.1),
+        trackCaloLinkMetric = cms.string('bestByDRPt'),
+        trackCaloNSigmaHigh = cms.double(1.0),
+        trackCaloNSigmaLow = cms.double(2.0),
+        trackEmDR = cms.double(0.04),
+        trackEmMayUseCaloMomenta = cms.bool(True),
+        trackEmUseAlsoTrackSigma = cms.bool(True),
+        trackMuDR = cms.double(0.2),
+        trackMuMatch = cms.string('boxBestByPtRatio'),
+        useCaloTrkWeightedAverage = cms.bool(False),
+        useTrackCaloSigma = cms.bool(True)
+    ),
+    muons = cms.InputTag("simGmtStage2Digis"),
+    pfAlgo = cms.string('PFAlgo2HGC'),
+    puAlgo = cms.string('LinearizedPuppi'),
+    puppiAlphaCrops = cms.vdouble(3, 3, 4),
+    puppiAlphaCropsPhotons = cms.vdouble(3, 3, 4),
+    puppiAlphaSlopes = cms.vdouble(1.5, 1.5, 2.2),
+    puppiAlphaSlopesPhotons = cms.vdouble(1.5, 1.5, 2.2),
+    puppiAlphaZeros = cms.vdouble(6.0, 6.0, 9.0),
+    puppiAlphaZerosPhotons = cms.vdouble(6.0, 6.0, 9.0),
+    puppiDr = cms.double(0.3),
+    puppiDrMin = cms.double(0.04),
+    puppiEtaCuts = cms.vdouble(2.0, 2.4, 3.1),
+    puppiPriors = cms.vdouble(5.0, 5.0, 7.0),
+    puppiPriorsPhotons = cms.vdouble(1.5, 1.5, 5.0),
+    puppiPtCuts = cms.vdouble(1.0, 2.0, 4.0),
+    puppiPtCutsPhotons = cms.vdouble(1.0, 2.0, 4.0),
+    puppiPtMax = cms.double(50.0),
+    puppiPtSlopes = cms.vdouble(0.3, 0.3, 0.3),
+    puppiPtSlopesPhotons = cms.vdouble(0.4, 0.4, 0.4),
+    puppiPtZeros = cms.vdouble(5.0, 7.0, 9.0),
+    puppiPtZerosPhotons = cms.vdouble(3.0, 4.0, 5.0),
+    puppiUsingBareTracks = cms.bool(True),
+    regions = cms.VPSet(
+        cms.PSet(
+            etaBoundaries = cms.vdouble(-3, -2.5),
+            etaExtra = cms.double(0.3),
+            phiExtra = cms.double(0.0),
+            phiSlices = cms.uint32(1)
+        ),
+        cms.PSet(
+            etaBoundaries = cms.vdouble(2.5, 3),
+            etaExtra = cms.double(0.3),
+            phiExtra = cms.double(0.0),
+            phiSlices = cms.uint32(1)
+        )
+    ),
+    tkMuons = cms.InputTag("L1TkMuons"),
+    trackRegionMode = cms.string('atCalo'),
+    tracks = cms.InputTag("pfTracksFromL1TracksHGCal"),
+    trkMaxChi2 = cms.double(15),
+    trkMinStubs = cms.uint32(4),
+    trkPtCut = cms.double(2.0),
+    useRelativeRegionalCoordinates = cms.bool(False),
+    useStandaloneMuons = cms.bool(True),
+    useTrackerMuons = cms.bool(False),
+    vtxAdaptiveCut = cms.bool(True),
+    vtxAlgo = cms.string('external'),
+    vtxCollection = cms.InputTag("L1TkPrimaryVertex"),
+    vtxFormat = cms.string('TkPrimaryVertex'),
+    vtxRes = cms.double(0.333)
+)
+
+
 process.l1tPFPuppiHT = cms.EDProducer("HLTHtMhtProducer",
     jetsLabel = cms.InputTag("l1tSlwPFPuppiJetsCorrected","Phase1L1TJetFromPfCandidates"),
     maxEtaJetHt = cms.double(2.4),
@@ -16166,6 +16554,204 @@ process.pfClusterRefsForJetsHO = cms.EDProducer("PFClusterRefCandidateProducer",
 )
 
 
+process.pfClustersFromCombinedCaloHCal = cms.EDProducer("L1TPFCaloProducer",
+    debug = cms.untracked.int32(0),
+    ecalCandidates = cms.VInputTag(cms.InputTag("pfClustersFromL1EGClusters")),
+    ecalClusterer = cms.PSet(
+        energyShareAlgo = cms.string('fractions'),
+        energyWeightedPosition = cms.bool(True),
+        grid = cms.string('phase2'),
+        minClusterEt = cms.double(0.5),
+        seedEt = cms.double(0.5),
+        zsEt = cms.double(0.4)
+    ),
+    emCorrector = cms.string(''),
+    hadCorrector = cms.string('L1Trigger/Phase2L1ParticleFlow/data/hadcorr_barrel_110X.root'),
+    hadCorrectorEmfMax = cms.double(-1.0),
+    hcCorrector = cms.string(''),
+    hcalCandidates = cms.VInputTag(),
+    hcalClusterer = cms.PSet(
+        energyShareAlgo = cms.string('fractions'),
+        energyWeightedPosition = cms.bool(True),
+        grid = cms.string('phase2'),
+        minClusterEt = cms.double(0.8),
+        seedEt = cms.double(0.5),
+        zsEt = cms.double(0.4)
+    ),
+    hcalDigis = cms.VInputTag(),
+    hcalDigisBarrel = cms.bool(True),
+    hcalDigisHF = cms.bool(False),
+    hcalHGCTowers = cms.VInputTag(),
+    hcalHGCTowersHadOnly = cms.bool(False),
+    linker = cms.PSet(
+        algo = cms.string('flat'),
+        energyShareAlgo = cms.string('fractions'),
+        energyWeightedPosition = cms.bool(True),
+        grid = cms.string('phase2'),
+        hoeCut = cms.double(0.1),
+        minClusterEt = cms.double(1.0),
+        minHadronEt = cms.double(1.0),
+        minHadronRawEt = cms.double(1.0),
+        minPhotonEt = cms.double(1.0),
+        noEmInHGC = cms.bool(False),
+        seedEt = cms.double(1.0),
+        zsEt = cms.double(0.0)
+    ),
+    phase2barrelCaloTowers = cms.VInputTag(cms.InputTag("L1EGammaClusterEmuProducer")),
+    resol = cms.PSet(
+        etaBins = cms.vdouble(0.7, 1.2, 1.6),
+        kind = cms.string('calo'),
+        offset = cms.vdouble(2.909, 2.864, 0.294),
+        scale = cms.vdouble(0.119, 0.127, 0.442)
+    )
+)
+
+
+process.pfClustersFromCombinedCaloHF = cms.EDProducer("L1TPFCaloProducer",
+    debug = cms.untracked.int32(0),
+    ecalCandidates = cms.VInputTag(),
+    ecalClusterer = cms.PSet(
+        energyShareAlgo = cms.string('fractions'),
+        energyWeightedPosition = cms.bool(True),
+        grid = cms.string('phase2'),
+        minClusterEt = cms.double(0.5),
+        seedEt = cms.double(0.5),
+        zsEt = cms.double(0.4)
+    ),
+    emCorrector = cms.string(''),
+    hadCorrector = cms.string('L1Trigger/Phase2L1ParticleFlow/data/hfcorr_110X.root'),
+    hadCorrectorEmfMax = cms.double(-1.0),
+    hcCorrector = cms.string(''),
+    hcalCandidates = cms.VInputTag(cms.InputTag("hgcalBackEndLayer2Producer","HGCalBackendLayer2Processor3DClustering")),
+    hcalClusterer = cms.PSet(
+        energyShareAlgo = cms.string('fractions'),
+        energyWeightedPosition = cms.bool(True),
+        grid = cms.string('phase2'),
+        minClusterEt = cms.double(0.8),
+        seedEt = cms.double(0.5),
+        zsEt = cms.double(0.4)
+    ),
+    hcalDigis = cms.VInputTag(cms.InputTag("simHcalTriggerPrimitiveDigis")),
+    hcalDigisBarrel = cms.bool(False),
+    hcalDigisHF = cms.bool(True),
+    hcalHGCTowers = cms.VInputTag(),
+    hcalHGCTowersHadOnly = cms.bool(False),
+    linker = cms.PSet(
+        algo = cms.string('flat'),
+        energyShareAlgo = cms.string('fractions'),
+        energyWeightedPosition = cms.bool(True),
+        grid = cms.string('phase2'),
+        hoeCut = cms.double(0.1),
+        minClusterEt = cms.double(1.0),
+        minHadronEt = cms.double(1.0),
+        minHadronRawEt = cms.double(1.0),
+        minPhotonEt = cms.double(1.0),
+        noEmInHGC = cms.bool(False),
+        seedEt = cms.double(1.0),
+        zsEt = cms.double(0.0)
+    ),
+    phase2barrelCaloTowers = cms.VInputTag(),
+    resol = cms.PSet(
+        etaBins = cms.vdouble(3.5, 4.0, 4.5, 5.0),
+        kind = cms.string('calo'),
+        offset = cms.vdouble(-1.125, 1.22, 1.514, 1.414),
+        scale = cms.vdouble(0.868, 0.159, 0.148, 0.194)
+    )
+)
+
+
+process.pfClustersFromHGC3DClusters = cms.EDProducer("PFClusterProducerFromHGC3DClusters",
+    corrector = cms.string('L1Trigger/Phase2L1ParticleFlow/data/hadcorr_HGCal3D_TC_110X.root'),
+    correctorEmfMax = cms.double(1.125),
+    emOnly = cms.bool(False),
+    emVsPUID = cms.PSet(
+        isPUFilter = cms.bool(True),
+        method = cms.string('BDT'),
+        preselection = cms.string(''),
+        variables = cms.VPSet(
+            cms.PSet(
+                name = cms.string('fabs(eta)'),
+                value = cms.string('abs(eta())')
+            ),
+            cms.PSet(
+                name = cms.string('coreShowerLength'),
+                value = cms.string('coreShowerLength()')
+            ),
+            cms.PSet(
+                name = cms.string('maxLayer'),
+                value = cms.string('maxLayer()')
+            ),
+            cms.PSet(
+                name = cms.string('sigmaPhiPhiTot'),
+                value = cms.string('sigmaPhiPhiTot()')
+            )
+        ),
+        weightsFile = cms.string('L1Trigger/Phase2L1ParticleFlow/data/hgcal_egID/Photon_Pion_vs_Neutrino_BDTweights.xml.gz'),
+        wp = cms.string('-0.02')
+    ),
+    emVsPionID = cms.PSet(
+        isPUFilter = cms.bool(False),
+        method = cms.string('BDT'),
+        preselection = cms.string(''),
+        variables = cms.VPSet(
+            cms.PSet(
+                name = cms.string('fabs(eta)'),
+                value = cms.string('abs(eta())')
+            ),
+            cms.PSet(
+                name = cms.string('coreShowerLength'),
+                value = cms.string('coreShowerLength()')
+            ),
+            cms.PSet(
+                name = cms.string('maxLayer'),
+                value = cms.string('maxLayer()')
+            ),
+            cms.PSet(
+                name = cms.string('hOverE'),
+                value = cms.string('hOverE()')
+            ),
+            cms.PSet(
+                name = cms.string('sigmaZZ'),
+                value = cms.string('sigmaZZ()')
+            )
+        ),
+        weightsFile = cms.string('L1Trigger/Phase2L1ParticleFlow/data/hgcal_egID/Photon_vs_Pion_BDTweights.xml.gz'),
+        wp = cms.string('0.01')
+    ),
+    etMin = cms.double(1.0),
+    preEmId = cms.string('hOverE < 0.3 && hOverE >= 0'),
+    resol = cms.PSet(
+        etaBins = cms.vdouble(
+            1.7, 1.9, 2.2, 2.5, 2.8,
+            2.9
+        ),
+        kind = cms.string('calo'),
+        offset = cms.vdouble(
+            1.793, 1.827, 2.363, 2.538, 2.812,
+            2.642
+        ),
+        scale = cms.vdouble(
+            0.138, 0.137, 0.124, 0.115, 0.106,
+            0.121
+        )
+    ),
+    src = cms.InputTag("hgcalBackEndLayer2Producer","HGCalBackendLayer2Processor3DClustering")
+)
+
+
+process.pfClustersFromL1EGClusters = cms.EDProducer("PFClusterProducerFromL1EGClusters",
+    corrector = cms.string(''),
+    etMin = cms.double(0.5),
+    resol = cms.PSet(
+        etaBins = cms.vdouble(0.7, 1.2, 1.6),
+        kind = cms.string('calo'),
+        offset = cms.vdouble(0.838, 0.924, 1.101),
+        scale = cms.vdouble(0.012, 0.017, 0.018)
+    ),
+    src = cms.InputTag("L1EGammaClusterEmuProducer")
+)
+
+
 process.pfNoPileUpJME = cms.EDProducer("TPPFCandidatesOnPFCandidates",
     bottomCollection = cms.InputTag("particleFlowPtrs"),
     enable = cms.bool(True),
@@ -16199,6 +16785,51 @@ process.pfTrack = cms.EDProducer("PFTrackProducer",
     TrackQuality = cms.string('highPurity'),
     TrajInEvents = cms.bool(False),
     UseQuality = cms.bool(True)
+)
+
+
+process.pfTracksFromL1TracksBarrel = cms.EDProducer("PFTrackProducerFromL1Tracks",
+    L1TrackTag = cms.InputTag("TTTracksFromTrackletEmulation","Level1TTTracks"),
+    nParam = cms.uint32(4),
+    resolCalo = cms.PSet(
+        etaBins = cms.vdouble(0.7, 1.2, 1.6),
+        kind = cms.string('calo'),
+        offset = cms.vdouble(2.909, 2.864, 0.294),
+        scale = cms.vdouble(0.119, 0.127, 0.442)
+    ),
+    resolTrack = cms.PSet(
+        etaBins = cms.vdouble(0.8, 1.2, 1.5, 2.0, 2.5),
+        kind = cms.string('track'),
+        offset = cms.vdouble(0.007, 0.009, 0.011, 0.015, 0.025),
+        scale = cms.vdouble(0.275, 0.404, 0.512, 0.48, 1.132)
+    )
+)
+
+
+process.pfTracksFromL1TracksHGCal = cms.EDProducer("PFTrackProducerFromL1Tracks",
+    L1TrackTag = cms.InputTag("TTTracksFromTrackletEmulation","Level1TTTracks"),
+    nParam = cms.uint32(4),
+    resolCalo = cms.PSet(
+        etaBins = cms.vdouble(
+            1.7, 1.9, 2.2, 2.5, 2.8,
+            2.9
+        ),
+        kind = cms.string('calo'),
+        offset = cms.vdouble(
+            1.793, 1.827, 2.363, 2.538, 2.812,
+            2.642
+        ),
+        scale = cms.vdouble(
+            0.138, 0.137, 0.124, 0.115, 0.106,
+            0.121
+        )
+    ),
+    resolTrack = cms.PSet(
+        etaBins = cms.vdouble(0.8, 1.2, 1.5, 2.0, 2.5),
+        kind = cms.string('track'),
+        offset = cms.vdouble(0.007, 0.009, 0.011, 0.015, 0.025),
+        scale = cms.vdouble(0.275, 0.404, 0.512, 0.48, 1.132)
+    )
 )
 
 
@@ -16523,6 +17154,21 @@ process.simBscDigis = cms.EDProducer("BSCTrigger",
     coincidence = cms.double(72.85),
     resolution = cms.double(3.0),
     theHits = cms.InputTag("mix","g4SimHitsBSCHits")
+)
+
+
+process.simCaloStage2Layer1Digis = cms.EDProducer("L1TCaloLayer1",
+    ecalToken = cms.InputTag("simEcalTriggerPrimitiveDigis"),
+    firmwareVersion = cms.int32(3),
+    hcalToken = cms.InputTag("simHcalTriggerPrimitiveDigis"),
+    unpackEcalMask = cms.bool(False),
+    unpackHcalMask = cms.bool(False),
+    useCalib = cms.bool(True),
+    useECALLUT = cms.bool(True),
+    useHCALLUT = cms.bool(True),
+    useHFLUT = cms.bool(True),
+    useLSB = cms.bool(True),
+    verbose = cms.bool(False)
 )
 
 
@@ -17111,6 +17757,11 @@ process.simGctDigis = cms.EDProducer("L1GctEmulator",
 )
 
 
+process.simGmtCaloSumDigis = cms.EDProducer("L1TMuonCaloSumProducer",
+    caloStage2Layer2Label = cms.InputTag("simCaloStage2Layer1Digis")
+)
+
+
 process.simGmtDigis = cms.EDProducer("L1MuGlobalMuonTrigger",
     BX_max = cms.int32(4),
     BX_max_readout = cms.int32(2),
@@ -17124,6 +17775,20 @@ process.simGmtDigis = cms.EDProducer("L1MuGlobalMuonTrigger",
     RPCfCandidates = cms.InputTag("simRpcTriggerDigis","RPCf"),
     SendMipIso = cms.untracked.bool(False),
     WriteLUTsAndRegs = cms.untracked.bool(False)
+)
+
+
+process.simGmtStage2Digis = cms.EDProducer("L1TMuonProducer",
+    autoBxRange = cms.bool(True),
+    autoCancelMode = cms.bool(True),
+    barrelTFInput = cms.InputTag("simKBmtfDigis","BMTF"),
+    bmtfCancelMode = cms.string('kftracks'),
+    bxMax = cms.int32(2),
+    bxMin = cms.int32(-2),
+    emtfCancelMode = cms.string('coordinate'),
+    forwardTFInput = cms.InputTag("simEmtfDigis","EMTF"),
+    overlapTFInput = cms.InputTag("simOmtfDigis","OMTF"),
+    triggerTowerInput = cms.InputTag("simGmtCaloSumDigis","TriggerTowerSums")
 )
 
 
@@ -17269,6 +17934,23 @@ process.simKBmtfStubs = cms.EDProducer("L1TMuonBarrelKalmanStubProducer",
     srcPhi = cms.InputTag("simTwinMuxDigis"),
     srcTheta = cms.InputTag("simDtTriggerPrimitiveDigis"),
     verbose = cms.int32(0)
+)
+
+
+process.simMuonGEMPadDigiClusters = cms.EDProducer("GEMPadDigiClusterProducer",
+    InputCollection = cms.InputTag("simMuonGEMPadDigis"),
+    maxClusterSize = cms.uint32(8),
+    maxClustersOHGE11 = cms.uint32(4),
+    maxClustersOHGE21 = cms.uint32(5),
+    mightGet = cms.optional.untracked.vstring,
+    nOHGE11 = cms.uint32(2),
+    nOHGE21 = cms.uint32(4)
+)
+
+
+process.simMuonGEMPadDigis = cms.EDProducer("GEMPadDigiProducer",
+    InputCollection = cms.InputTag("simMuonGEMDigis"),
+    mightGet = cms.optional.untracked.vstring
 )
 
 
@@ -35353,7 +36035,7 @@ process.HLTEle5OpenL1SeededTask = cms.Task(process.hltEgammaCandidatesL1Seeded, 
 process.ecalClustersNoPFBoxTask = cms.Task(process.hybridClusteringTask, process.multi5x5ClusteringTask, process.multi5x5PreshowerClusteringTask)
 
 
-process.l1tReconstructionTask = cms.Task(process.L1EGammaClusterEmuProducer, process.L1TkElectronsEllipticMatchCrystal, process.L1TkElectronsEllipticMatchHGC, process.L1TkMuons, process.L1TkPhotonsCrystal, process.L1TkPhotonsHGC, process.L1TkPrimaryVertex, process.l1EGammaEEProducer, process.l1tSlwPFPuppiJets, process.l1tSlwPFPuppiJetsCorrected, process.simEmtfDigis, process.simKBmtfDigis, process.simKBmtfStubs, process.simOmtfDigis, process.simTwinMuxDigis)
+process.l1tReconstructionTask = cms.Task(process.L1EGammaClusterEmuProducer, process.L1TkElectronsEllipticMatchCrystal, process.L1TkElectronsEllipticMatchHGC, process.L1TkMuons, process.L1TkPhotonsCrystal, process.L1TkPhotonsHGC, process.L1TkPrimaryVertex, process.l1EGammaEEProducer, process.l1NNTauProducerPuppi, process.l1PFMetPuppi, process.l1pfCandidates, process.l1pfProducerBarrel, process.l1pfProducerHF, process.l1pfProducerHGCal, process.l1pfProducerHGCalNoTK, process.l1tSlwPFPuppiJets, process.l1tSlwPFPuppiJetsCorrected, process.pfClustersFromCombinedCaloHCal, process.pfClustersFromCombinedCaloHF, process.pfClustersFromHGC3DClusters, process.pfClustersFromL1EGClusters, process.pfTracksFromL1TracksBarrel, process.pfTracksFromL1TracksHGCal, process.simCaloStage2Layer1Digis, process.simCscTriggerPrimitiveDigis, process.simDtTriggerPrimitiveDigis, process.simEmtfDigis, process.simGmtCaloSumDigis, process.simGmtStage2Digis, process.simKBmtfDigis, process.simKBmtfStubs, process.simMuonGEMPadDigiClusters, process.simMuonGEMPadDigis, process.simOmtfDigis, process.simTwinMuxDigis)
 
 
 process.displacedGlobalMuonTrackingTask = cms.Task(process.iterDisplcedTrackingTask)
