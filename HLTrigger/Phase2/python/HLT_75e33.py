@@ -633,7 +633,17 @@ process.schedule = cms.Schedule(*[
     process.HLT_Mu37_Mu27_FromL1TkMuon,
     process.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_FromL1TkMuon,
     process.HLT_TriMu_10_5_5_DZ_FromL1TkMuon,
- 
+
+    # E/Gamma L1T paths
+    process.L1T_TkEm51,
+    process.L1T_TkEle36,
+    process.L1T_TkIsoEm36,
+    process.L1T_TkIsoEle28,
+    process.L1T_TkEm37TkEm24,
+    process.L1T_TkEle25TkEle12,
+    process.L1T_TkIsoEm22TkIsoEm12,
+    process.L1T_TkIsoEle22TkEm12,
+
     # E/Gamma unseeded paths
     process.HLT_Ele32_WPTight_Unseeded,
     process.HLT_Ele26_WP70_Unseeded,
@@ -647,20 +657,10 @@ process.schedule = cms.Schedule(*[
     process.HLT_Photon108EB_TightID_TightIso_L1Seeded,
     process.HLT_Photon187_L1Seeded,
     process.HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded,
-    process.HLT_Diphoton30_23_IsoCaloId_L1Seeded,
     process.HLT_DoubleEle23_12_Iso_L1Seeded,
-    
-    # E/Gamma L1T seeds
-    process.L1T_TkIsoEle22TkEm12,
-    process.L1T_TkEle25TkEle12,
-    process.L1T_TkEle36,
-    process.L1T_TkEm37TkEm24,
-    process.L1T_TkEm51,
-    process.L1T_TkIsoEle28,
-    process.L1T_TkIsoEm22TkIsoEm12,
-    process.L1T_TkIsoEm36,
+    process.HLT_Diphoton30_23_IsoCaloId_L1Seeded,
 
-    # Taus L1T seeds
+    # Taus L1T paths
     process.L1T_DoubleNNTau52,
     process.L1T_SingleNNTau150,
 
