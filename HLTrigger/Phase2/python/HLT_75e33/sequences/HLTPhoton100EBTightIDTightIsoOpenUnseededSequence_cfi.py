@@ -22,9 +22,11 @@ HLTPhoton100EBTightIDTightIsoOpenUnseededSequence = cms.Sequence(
     HLTHgcalTiclPFClusteringForEgammaUnseeded +
     hltEgammaCandidatesWrapperUnseeded +
     hltEG100EtUnseededFilter +
-    cms.ignore(hltPhoton100EBTightIDTightIsoClusterShapeUnseededFilter
-)+HLTDoLocalHcalSequence +
+    cms.ignore(hltPhoton100EBTightIDTightIsoClusterShapeUnseededFilter) +
+    HLTDoLocalHcalSequence +
     HLTFastJetForEgamma +
-    cms.ignore(hltPhoton100EBTightIDTightIsoHEUnseededFilter)+cms.ignore(hltPhoton100EBTightIDTightIsoEcalIsoUnseededFilter)+HLTPFHcalClusteringForEgamma +
+    cms.ignore(hltPhoton100EBTightIDTightIsoHEUnseededFilter) +
+    cms.ignore(hltPhoton100EBTightIDTightIsoEcalIsoUnseededFilter) +
+    HLTPFHcalClusteringForEgamma +
     cms.ignore(hltPhoton100EBTightIDTightIsoHcalIsoUnseededFilter),
     HLTPhoton100EBTightIDTightIsoOpenUnseededTask)

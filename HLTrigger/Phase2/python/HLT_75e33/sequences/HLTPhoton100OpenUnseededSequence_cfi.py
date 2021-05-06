@@ -19,8 +19,9 @@ HLTPhoton100OpenUnseededSequence = cms.Sequence(
     HLTHgcalTiclPFClusteringForEgammaUnseeded +
     hltEgammaCandidatesWrapperUnseeded +
     hltEG100EtUnseededFilter +
-    cms.ignore(hltPhoton100HgcalHEUnseededFilter
-)+HLTDoLocalHcalSequence +
+    cms.ignore(hltPhoton100HgcalHEUnseededFilter) +
+    HLTDoLocalHcalSequence +
     HLTFastJetForEgamma +
     cms.ignore(hltPhoton100HEUnseededFilter),
-    HLTPhoton100OpenUnseededTask)
+    HLTPhoton100OpenUnseededTask
+)
