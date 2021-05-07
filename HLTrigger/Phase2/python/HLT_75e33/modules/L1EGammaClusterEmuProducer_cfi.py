@@ -39,7 +39,7 @@ L1EGammaClusterEmuProducer = cms.EDProducer("L1EGCrystalClusterEmulatorProducer"
             1.05, 1.05, 1.05, 1.05
         )
     ),
-    ecalTPEB = cms.InputTag("simEcalEBTriggerPrimitiveDigis","","HLT"),
-    hcalTP = cms.InputTag("simHcalTriggerPrimitiveDigis","","HLT")
+    ecalTPEB = cms.InputTag("simEcalEBTriggerPrimitiveDigis"),
+    hcalTP = cms.InputTag("simHcalTriggerPrimitiveDigis")
 )
 
